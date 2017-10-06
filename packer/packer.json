@@ -1,0 +1,27 @@
+{
+  "variables": {
+      "service_account_json": "service-account.json"
+  },
+  "builders": [ 
+    {
+      "type": "googlecompute",
+      "disk_size": 10,
+      "image_name": "flevian-vof-image-ruby-{{timestamp}}",
+      "image_description": "vof image for a rails application with the github repo code included",
+      "project_id": "vof-testbed-2",
+      "source_image": "ubuntu-1604-xenial-v20170815a",
+      "region": "europe-west1",
+      "zone": "europe-west1-b",
+      "image_family": "ubuntu-1604-lts",
+      "ssh_username": "vof",
+      "account_file": "{{user `service_account_json`}}",
+      "machine_type": "n1-standard-1"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "setup.sh"
+    }
+  ]
+}

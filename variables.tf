@@ -3,27 +3,129 @@ variable "region" {
   default = "europe-west1"
 }
 
+variable "zone" {
+  type = "string"
+  default = "europe-west1-b"
+}
+
+variable "vof_host" {
+  type = "string"
+  default = "105.21.32.62"
+}
+
+variable "project_id" {
+  type = "string"
+  default = "vof-testbed-2"
+}
+
+variable "machine_type" {
+  type = "string"
+  default = "n1-standard-1"
+}
+
+variable "credential_file" {
+  type = "string"
+  default = "service-account.json"
+}
+
+variable "env_name" {
+  type = "string"
+}
+
+variable "state_path" {
+  type = "string"
+}
+
+variable "max_instances" {
+  type = "string"
+  default = "8"
+}
+
+variable "min_instances" {
+  type = "string"
+  default = "2"
+}
+
+variable "vof_disk_image" {
+  type = "string"
+}
+
+variable "vof_disk_type" {
+  type = "string"
+  default = "pd-ssd"
+}
+
+variable "vof_disk_size" {
+  type = "string"
+  default = "10"
+}
+
+variable "request_path" {
+  type = "string"
+  default = "/"
+}
+
+variable "check_interval_sec" {
+  type = "string"
+  default = "2"
+}
+
+variable "unhealthy_threshold" {
+  type = "string"
+  default = "2"
+}
+
+variable "healthy_threshold" {
+  type = "string"
+  default = "2"
+}
+
+variable "timeout_sec" {
+  type = "string"
+  default = "1"
+}
+
+variable "ip_cidr_range" {
+  type = "string"
+  default = "10.0.0.0/24"
+}
+
+variable "db_username" {
+  type = "string"
+  default = "daniel"
+}
+
+variable "db_replication_type" {
+  type = "string"
+  default = "SYNCHRONOUS"
+}
+
+variable "db_backup_start_time" {
+  type = "string"
+  default = "00:12"
+}
+
 variable "db_instance_tier" {
   type = "string"
   default = "db-f1-micro"
 }
 
-variable "vof_host" {
+variable "db_failover_target" {
   type = "string"
-  default = ""
+  default = "true"
 }
 
-variable "project_id" {
+variable "db_connect_retry_interval" {
   type = "string"
-  default = ""
+  default = "40"
 }
 
-variable "db_username" {
+variable "db_master_replica_name" {
   type = "string"
-  default = ""
+  default = "vof-replica-master"
 }
 
-variable "credential_file" {
+variable "db_master_replica_password" {
   type = "string"
-  default = "/tmp/service-account.json"
+  default = "vof-replica"
 }

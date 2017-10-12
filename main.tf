@@ -6,21 +6,18 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = "some-bucket"
-    path = "/path/to/state/file"
-    project = "some-project-id"
-    credentials = <<JSON
-JSON
+    bucket = "vof-tfstate-daniel"
+    project = "vof-testbed-2"
+    credentials = "service-account.json"
   }
 }
 
 data "terraform_remote_state" "vof" {
   backend = "gcs"
   config {
-    bucket = "some-bucket"
-    path = "/path/to/state/file"
-    project = "some-project-id"
-    credentials = <<JSON
-JSON
+    bucket = "vof-tstate-daniel"
+    path = "${var.state_path}"
+    project = "vof-testbed-2"
+    credentials = "service-account.json"
   }
 }

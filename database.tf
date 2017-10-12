@@ -9,7 +9,8 @@ resource "random_id" "vof-db-user-password" {
 resource "google_sql_database_instance" "vof-database-instance" {
   region = "${var.region}"
   database_version = "POSTGRES_9_6"
-  name = "vof-database-instance-${replace(lower(random_id.db-name.b64), "_", "-")}"
+  name = "${var.env_name}-vof-database-instance-${replace(lower(random_id.db-name.b64), "_", "-")}"
+  project = "${var.project_id}"
 
   settings {
     tier = "${var.db_instance_tier}"
@@ -25,7 +26,7 @@ resource "google_sql_database_instance" "vof-database-instance" {
 }
 
 resource "google_sql_database" "vof-database" {
-  name = "vof-database"
+  name = "${var.env_name}-vof-database"
   instance = "${google_sql_database_instance.vof-database-instance.name}"
   charset = "UTF8"
   collation = "en_US.UTF8"

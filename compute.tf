@@ -36,7 +36,16 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   tags = ["${var.env_name}-vof-app-server", "vof-app-server"]
 
   network_interface {
-    subnetwork = "${google_compute_subnetwork.vof-private-subnetwork.name}"
+	subnetwork = "${google_compute_subnetwork.vof-private-subnetwork.name}"
+	access_config {}
+  }
+
+  disk {
+	source_image = "${var.vof_disk_image}"
+	auto_delete = true
+	boot = true
+	disk_type = "${var.vof_disk_type}"
+	disk_size_gb = "${var.vof_disk_size}"
   }
 
   disk {

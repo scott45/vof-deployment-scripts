@@ -80,4 +80,3 @@ resource "google_compute_firewall" "vof-allow-healthcheck-firewall" {
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
   target_tags = ["${var.env_name}-vof-app-server", "vof-app-server"]
 }
-

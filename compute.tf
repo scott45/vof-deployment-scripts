@@ -41,14 +41,6 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   }
 
   disk {
-	source_image = "${var.vof_disk_image}"
-	auto_delete = true
-	boot = true
-	disk_type = "${var.vof_disk_type}"
-	disk_size_gb = "${var.vof_disk_size}"
-  }
-
-  disk {
     source_image = "${var.vof_disk_image}"
     auto_delete = true
     boot = true

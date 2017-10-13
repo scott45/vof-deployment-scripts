@@ -38,7 +38,7 @@ variable "state_path" {
 
 variable "max_instances" {
   type = "string"
-  default = "1"
+  default = "2"
 }
 
 variable "min_instances" {

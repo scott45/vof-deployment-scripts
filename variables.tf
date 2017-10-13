@@ -38,12 +38,12 @@ variable "state_path" {
 
 variable "max_instances" {
   type = "string"
-  default = "8"
+  default = "1"
 }
 
 variable "min_instances" {
   type = "string"
-  default = "2"
+  default = "1"
 }
 
 variable "vof_disk_image" {
@@ -62,7 +62,7 @@ variable "vof_disk_size" {
 
 variable "request_path" {
   type = "string"
-  default = "/"
+  default = "/login"
 }
 
 variable "check_interval_sec" {

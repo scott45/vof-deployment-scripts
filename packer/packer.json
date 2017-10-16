@@ -16,8 +16,7 @@
 			"image_family": "ubuntu-1604-lts",
 			"image_name": "daniel-vof-image-ruby-{{timestamp}}",
 			"disk_size": 10,
-			"account_file": "{{ user `service_account_json`}}",
-			"startup_script_file": "startup.sh"
+			"account_file": "{{ user `service_account_json`}}"
 		}
 	],
 	"provisioners": [

@@ -42,21 +42,37 @@ create_log_files() {
   sudo chown -R vof:vof /var/log/vof/vof.out.log /var/log/vof/vof.err.log
 }
 
+create_vof_supervisord_conf() {
+  sudo cat <<EOF > /etc/supervisor/conf.d/vof.conf
+[program:vof]
+command=/usr/bin/env RAILS_ENV=${RAILS_ENV} PORT=${PORT} /usr/bin/nohup /usr/local/bin/bundle exec puma -C config/puma.rb
+directory=/home/vof/app
+autostart=true
+autorestart=true
+startretries=3
+stderr_logfile=/var/log/vof/vof.err.log
+stdout_logfile=/var/log/vof/vof.out.log
+user=vof
+EOF
+}
+
 start_app() {
   local app_root="/home/vof/app"
 
   sudo -u vof bash -c "mkdir -p /home/vof/app/log"
   sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:setup"
   sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:seed"
-  sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} PORT=${PORT} nohup bundle exec puma -C config/puma.rb 1> /var/log/vof/vof.out.log 2> /var/log/vof/vof.err.log &"
+  supervisorctl update && supervisorctl reload
 }
 
 main() {
   echo "startup script invoked at $(date)" >> /tmp/script.log
 
-  create_application_yml
-  create_secrets_yml
+  start_postgres
+  set_up_db_user
   create_log_files
+  create_secrets_yml
+  create_vof_supervisord_conf
   start_app
 }
 

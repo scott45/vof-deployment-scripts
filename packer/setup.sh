@@ -17,8 +17,7 @@ install_system_dependencies() {
   sudo apt-get install -y --no-install-recommends git-core curl zlib1g-dev     \
     build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev \
     sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev wget nodejs     \
-    python-software-properties libffi-dev postgresql postgresql-contrib   \
-    libpq-dev sudo vim less
+    python-software-properties libffi-dev libpq-dev sudo vim less supervisor
 }
 
 install_ruby(){
@@ -51,6 +50,10 @@ install_vof_ruby_dependencies() {
   fi
 }
 
+start_supervisor_service() {
+  sudo service supervisor start
+}
+
 setup_vof_code() {
   sudo chown -R vof:vof /home/vof
   
@@ -68,6 +71,7 @@ main() {
   rm -r /tmp/workdir
 
   setup_vof_code
+  start_supervisor_service
 }
 
 main "$@"

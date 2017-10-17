@@ -6,7 +6,7 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = "vof-tfstate"
+    bucket = "vof-tfstate-daniel"
     project = "vof-testbed-2"
     credentials = "service-account.json"
   }
@@ -15,7 +15,7 @@ terraform {
 data "terraform_remote_state" "vof" {
   backend = "gcs"
   config {
-    bucket = "vof-tstate"
+    bucket = "vof-tfstate-daniel"
     path = "${var.state_path}"
     project = "vof-testbed-2"
     credentials = "service-account.json"

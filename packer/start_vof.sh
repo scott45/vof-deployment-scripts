@@ -68,9 +68,8 @@ start_app() {
 main() {
   echo "startup script invoked at $(date)" >> /tmp/script.log
 
-  start_postgres
-  set_up_db_user
   create_log_files
+  create_application_yml
   create_secrets_yml
   create_vof_supervisord_conf
   start_app

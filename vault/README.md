@@ -18,7 +18,7 @@ The first thing we need to do is to create a new project at [Google Project Cons
 
 Project Name | Project ID
 ------------ | ----------
-ProjectVault | vault-20160301
+ProjectVault | vof-testbed-2
 
 ### Get Authentication JSON File
 
@@ -28,7 +28,7 @@ This file is downloaded directly from the [Google Developers Console][gProject]:
 
 1. Click the menu button in the top left corner, and navigate to "Permissions", then "Service accounts", and finally "Create service account".
 
-1. Provide **vault-20160301** as the name and ID in the corresponding fields, select "Furnish a new private key", and select "JSON" as the key type.
+1. Provide **vof-testbed-2** as the name and ID in the corresponding fields, select "Furnish a new private key", and select "JSON" as the key type.
 
 1. Clicking "Create" will download your credentials.
 
@@ -85,7 +85,7 @@ zone = us-central1-a
 [core]
 account = youraccount@gmail.com
 disable_usage_reporting = True
-project = vault-20160301
+project = vof-testbed-2
 ```
 
 ### Install Vault Client On Local Machine
@@ -101,7 +101,7 @@ $ git clone https://github.com/xuwang/gcp-vault.git
 $ cp account.json gcp-vault/tf/
 $ cd gcp-vault/tf
 ```
-**Note:** You should check default values defined in **tf/variables.tf** and make modification to fit your own case, e.g. use your own **`google_project_id`** instead of the default _`vault-20160301`_.
+**Note:** You should check default values defined in **tf/variables.tf** and make modification to fit your own case, e.g. use your own **`google_project_id`** instead of the default _`vof-testbed-2`_.
 
 #### Plan and apply the terraform managed resources
 

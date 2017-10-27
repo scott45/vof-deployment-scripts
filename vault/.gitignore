@@ -1,0 +1,12 @@
+build
+account.json
+*.pem
+*.key
+.DS_Store
+.git
+.terraform
+.vagrant
+*.tfstate
+*.backup
+discovery_url.txt
+vault.env

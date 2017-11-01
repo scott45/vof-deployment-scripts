@@ -25,7 +25,7 @@ variable "machine_type" {
 
 variable "credential_file" {
   type = "string"
-  default = "service-account.json"
+  default = "../shared/account.json"
 }
 
 variable "env_name" {

@@ -8,7 +8,7 @@ terraform {
   backend "gcs" {
     bucket = "vof-tfstate-daniel"
     project = "vof-testbed-2"
-    credentials = "service-account.json"
+    credentials = "../shared/account.json"
   }
 }
 
@@ -18,6 +18,6 @@ data "terraform_remote_state" "vof" {
     bucket = "vof-tfstate-daniel"
     path = "${var.state_path}"
     project = "vof-testbed-2"
-    credentials = "service-account.json"
+    credentials = "${file("${var.credential_file}")}"
   }
 }

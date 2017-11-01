@@ -1,6 +1,6 @@
 {
 	"variables": {
-		"service_account_json": "templates/service-account.json",
+		"service_account_json": "../shared/account.json",
 		"vof_path" : "{{env `VOF_PATH`}}"
 	},
 	"builders": [

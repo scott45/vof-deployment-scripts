@@ -3,7 +3,7 @@ variable "google_project_id" {
 }
 
 variable "account_file" {
-    default = "account.json"
+    default = "../../shared/account.json"
 }
 
 variable "region" {

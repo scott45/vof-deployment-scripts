@@ -73,6 +73,9 @@ main() {
   create_secrets_yml
   create_vof_supervisord_conf
   start_app
+
+  # Setup Vault
+  source /home/vof/vault_token.sh
 }
 
 main "$@"

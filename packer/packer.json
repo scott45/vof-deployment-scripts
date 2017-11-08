@@ -6,7 +6,7 @@
 	"builders": [
 		{
 			"type": "googlecompute",
-			"project_id": "vof-testbed-2",
+			"project_id": "vof-migration-test",
 			"machine_type": "n1-standard-1",
 			"source_image": "ubuntu-1604-xenial-v20170815a",
 			"region": "europe-west1",
@@ -29,6 +29,11 @@
 			"type": "file",
 			"source": "start_vof.sh",
       "destination": "/home/vof/start_vof.sh"
+		},
+		{
+			"type": "file",
+			"source": "vault_token.sh",
+      "destination": "/home/vof/vault_token.sh"
 		},
 		{
 			"type": "shell",

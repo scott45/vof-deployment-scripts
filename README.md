@@ -19,6 +19,7 @@ The code in this repository aim to bring these benefits to the VOF application. 
 ### Content
 
 - [Infrastructure setup and app deployment](docs/infrastructure.md)
+- [Environment Creation](docs/environment.md)
 - [Secret Management](docs/secret_management.md)
 - [Release management](docs/release.md)
 - [Monitoring and Logging](docs/monitoring_logging.md)

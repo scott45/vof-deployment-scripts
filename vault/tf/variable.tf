@@ -1,5 +1,5 @@
 variable "google_project_id" { 
-    default = "vof-testbed-2"
+    default = "vof-migration-test"
 }
 
 variable "account_file" {
@@ -52,7 +52,7 @@ variable "node_count" {
 }
 
 variable "vault_release_url" {
-    default = "https://releases.hashicorp.com/vault/0.5.1/vault_0.5.1_linux_amd64.zip"
+    default = "https://releases.hashicorp.com/vault/0.8.3/vault_0.8.3_linux_amd64.zip"
 }
 
 variable "vault_conf_file" {

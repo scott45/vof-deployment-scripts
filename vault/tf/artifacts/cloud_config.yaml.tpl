@@ -196,6 +196,17 @@ write_files:
         #export VAULT_ADDR=<vault-service-endpoint-ip>
         #export VAULT_CLIENT_CERT=/var/lib/apps/vault/certs/client.crt
         #export VAULT_CLIENT_KEY=/var/lib/apps/vault/certs/client.key
+  - path: /var/log/vault/vault_audit.log
+    permission: 0644
+    content: |
+        echo "Vault Audit Logs"
+  - path: /artifacts/vault/acl.hcl
+    permission: 0664
+    owner: core
+    content: |
+        path "secret/*" {
+          capabilities = ["create", "read"]
+        }
   - path: /etc/profile.d/alias.sh
     content: |
         alias lal="ls -al"

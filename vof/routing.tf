@@ -1,10 +1,6 @@
-resource "google_compute_global_address" "vof-entrance-ip" {
-  name = "${var.env_name}-vof-entrance-ip"
-}
-
 resource "google_compute_global_forwarding_rule" "vof-http" {
   name       = "${var.env_name}-vof-http"
-  ip_address = "${google_compute_global_address.vof-entrance-ip.address}"
+  ip_address = "${var.reserved_env_ip}"
   target     = "${google_compute_target_http_proxy.vof-http-proxy.self_link}"
   port_range = "80"
 }
@@ -19,7 +15,7 @@ resource "google_compute_url_map" "vof-http-url-map" {
   default_service = "${google_compute_backend_service.web.self_link}"
 
   host_rule {
-    hosts        = ["${google_compute_global_address.vof-entrance-ip.address}"]
+    hosts        = ["${var.reserved_env_ip}"]
     path_matcher = "allpaths"
   }
 

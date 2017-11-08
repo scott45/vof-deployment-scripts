@@ -13,6 +13,8 @@ variable "vof_host" {
   default = "105.21.32.62"
 }
 
+variable "reserved_env_ip" {}
+
 variable "project_id" {
   type = "string"
   default = "vof-migration-test"

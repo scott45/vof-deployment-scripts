@@ -27,7 +27,7 @@ resource "google_compute_instance_group_manager" "vof-app-server-group-manager" 
 }
 
 resource "google_compute_instance_template" "vof-app-server-template" {
-  name = "${var.env_name}-vof-app-server-template"
+  name_prefix = "${var.env_name}-vof-app-server-template-"
   machine_type = "${var.machine_type}"
   region = "${var.region}"
   description = "Base template to create VOF instances"
@@ -49,7 +49,7 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   }
 
   metadata {
-    databaseUser = "${var.db_username}"
+    databaseUser = "${random_id.vof-db-user.b64}"
     databasePassword = "${random_id.vof-db-user-password.b64}"
     databaseHost = "${google_sql_database_instance.vof-database-instance.ip_address.0.ip_address}"
     databasePort = "5432"

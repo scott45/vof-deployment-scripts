@@ -15,7 +15,7 @@ variable "vof_host" {
 
 variable "project_id" {
   type = "string"
-  default = "vof-testbed-2"
+  default = "vof-migration-test"
 }
 
 variable "machine_type" {

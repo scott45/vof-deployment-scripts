@@ -2,6 +2,10 @@ resource "random_id" "db-name" {
   byte_length = 8
 }
 
+resource "random_id" "vof-db-user" {
+  byte_length = 8
+}
+
 resource "random_id" "vof-db-user-password" {
   byte_length = 16
 }
@@ -39,14 +43,14 @@ resource "google_sql_database" "vof-database" {
 }
 
 resource "google_sql_user" "vof-database-user" {
-  name = "${var.db_username}"
+  name = "${random_id.vof-db-user.b64}"
   password = "${random_id.vof-db-user-password.b64}"
   instance = "${google_sql_database_instance.vof-database-instance.name}"
   host = "${var.vof_host}"
 }
 
 output "vof_db_user_name" {
-  value = "${var.db_username}"
+  value = "${random_id.vof-db-user.b64}"
 }
 
 output "vof_db_user_password" {

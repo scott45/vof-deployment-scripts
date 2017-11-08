@@ -47,6 +47,7 @@ install_vof_ruby_dependencies() {
     popd
 
     gem install bundler --no-ri --no-rdoc
+    gem install stackdriver --no-ri --no-rdoc
   fi
 }
 

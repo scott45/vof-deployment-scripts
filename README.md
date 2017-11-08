@@ -3,9 +3,9 @@
 
 ### Tech stack
 
-- [Terraform](http://www.terraform.org)
-- Packer
-- Hashicorp Vault
+- [Terraform](https://www.terraform.io)
+- [Packer](https://www.packer.io)
+- [Hashicorp Vault](https://www.vaultproject.io)
 - Google Compute Platform
 
 

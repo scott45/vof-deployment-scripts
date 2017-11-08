@@ -1,0 +1,35 @@
+# VOF Infrastructure 
+
+
+### Tech stack
+
+- [Terraform](http://www.terraform.org)
+- Packer
+- Hashicorp Vault
+- Google Compute Platform
+
+
+### Introduction
+
+Infrastructure as code helps standardize and automate the creation/orchestration of networks, provisioning of server systems, securing and deployment of  applications in a repeatable manner.
+
+The code in this repository aim to bring these benefits to the VOF application. With a single command one, can spin up an entire secure network with the application deployed on a cluster of app servers behind a load balancer and highly performant database. 
+
+
+### Content
+
+- [Infrastructure setup and app deployment](docs/infrastructure.md)
+- [Secret Management](docs/secret_management.md)
+- [Release management](docs/release.md)
+- [Monitoring and Logging](docs/monitoring_logging.md)
+- [DNS](docs/dns.md)
+- [Maintenance](docs/maintenance.md)
+
+### Contributors
+
+- Kenaiza Flevian
+- [Sebuuma Daniel](https://www.github.com/Sprojects)
+- Mukiibi David
+- Businge Scott
+- Nana Elizabeth
+- Aoka Victoria

@@ -17,7 +17,7 @@ Note: make sure you are running all these commands while you are in the director
 
 ### Step 1:
 
-Run <kbd>**terraform plan -var="env_name=environment name goes here" -var="vof_disk_image=image name that was created by packer or got from google images inventory goes here" -var="state_path=$TF_VAR_state_path"**</kbd> to have a glimpse of what the terraform scripts will create when you run the above command.
+Run <kbd>**terraform plan -var="env_name i.e environment name goes here" -var="vof_disk_image i.e image name that was created by packer or got from google images inventory goes here" -var="state_path=$TF_VAR_state_path"**</kbd> to have a glimpse of what the terraform scripts will create when you run the above command.
 
 ### Step 2:
 

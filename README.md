@@ -28,7 +28,7 @@ The code in this repository aim to bring these benefits to the VOF application. 
 
 ### Contributors
 
-- Kenaiza Flevian
+- Kanaiza Flevian
 - [Sebuuma Daniel](https://www.github.com/Sprojects)
 - Mukiibi David
 - Businge Scott

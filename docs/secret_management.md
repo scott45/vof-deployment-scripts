@@ -80,3 +80,34 @@ The audit backend feature is enable to allow the system administrator keep track
 
 - Enable the audit backend; `vault audit-enable file file_path=/var/log/vault/vault_audit.log`
 - The vault_audit.log file is created automatically during creation of the virtual machine that is hosting the Vault system. 
+
+## Usage
+
+### CLI
+
+#### Write to secret backend
+`vault write secret/production/password value=pass`
+
+#### Read secret backend
+`vault read secret/production/password` or `vault read -field=value secret/production/password`
+
+### HTTP API
+
+#### Write to secret backend
+
+```
+curl -X POST -H "X-Vault-Token: ...." \
+     http://vault-address:8200/secret/production/password \
+     -d {"value":"pass"}
+```
+
+#### Read secret backend
+
+```
+curl -X GET -H "X-Vault-Token: ...." \
+     http://vault-address:8200/secret/production/password
+```
+
+#### Rails vault gem
+
+Instructions on how to install and use this gem can be found [here](http://www.rubydoc.info/gems/vault/0.10.1)

@@ -54,6 +54,7 @@ resource "google_compute_instance_template" "vof-app-server-template" {
     databaseHost = "${google_sql_database_instance.vof-database-instance.ip_address.0.ip_address}"
     databasePort = "5432"
     databaseName = "${var.env_name}-vof-database"
+    railsEnv = "${var.env_name}"
     startup-script = "/home/vof/start_vof.sh"
     serial-port-enable = 1
   }

@@ -3,15 +3,15 @@
 set -ex
 set -o pipefail
 
-export PORT="${PORT:-8080}"
-export RAILS_ENV="${RAILS_ENV:-staging}"
-
 get_var() {
   local name="$1"
 
   curl -s -H "Metadata-Flavor: Google" \
     "http://metadata.google.internal/computeMetadata/v1/instance/attributes/${name}"
 }
+
+export PORT="${PORT:-8080}"
+export RAILS_ENV='$(get_var "railsEnv")'
 
 create_application_yml() {
   cat <<EOF > /home/vof/app/config/application.yml

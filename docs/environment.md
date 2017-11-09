@@ -1,6 +1,4 @@
 # Environment Creation
-
-# Environment Creation
 ===================
 **Pre-requisites:**
 Run this command in your terminal: 

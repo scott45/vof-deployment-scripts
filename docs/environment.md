@@ -2,7 +2,7 @@
 
 **Pre-requisites:**
 Run this command in your terminal:
-<kbd>**export TF_VAR_state_path="staging-state/terraform.tfstate"**</kbd>
+`**export TF_VAR_state_path="staging-state/terraform.tfstate"**`
 
 The above command sets the environment variable **TF_VAR_state_path ** to that given value. This is the path in a GCS bucket that our terraform state file will be stored. The prefix of **TF_VAR_state_path ** for instance <kbd>staging</kbd> in <kbd>staging-state/terraform.tfstate</kbd> should always reflect the name of the environment being created for proper management of each environment state and remember to reflect that change in <kbd>main.tf</kbd>
 

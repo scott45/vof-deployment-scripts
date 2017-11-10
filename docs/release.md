@@ -1,26 +1,5 @@
 # Release Management
 
-[![CircleCI Build Status](https://circleci.com/gh/circleci/circleci-docs.svg?style=shield)](https://circleci.com/gh/circleci/circleci-docs) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-## Table of contents
-
---------------
->Introduction
-
->CircleCI
-
->Vof Requirements
-
->Solution
-
->Conclusion 
-
->Release plan and Release Notes
-
->Credits
-
->License
-
 ### Introduction 
 Release management is the process of managing, planning, scheduling and controlling a software build through different stages and environments; including testing and deploying software releases.  As part of the VOF migration to GCP, it's one of the many practices that was implemented. Described below are the ways team keeps the release process on track for upcoming releases.
 
@@ -68,51 +47,3 @@ As per the time of the first presentation, The pipeline is halfway done serving 
 
 ### Release plan and Release Notes
 To be prepared with the final presentation.
-
-### Credits / Contributors
-
-DevOps Engineers
-
-1. [Victoria Aoka](https://github.com/victoriaaoka)
-
-2. [Sebuuma Daniel](https://github.com/SProjects)
-
-3. [Flevian Kanaiza](https://github.com/FlevianK)
-
-4. [Natalie Elizabeth](https://github.com/natalie-elizabeth)
-
-5. [Businge Scott](https://github.com/scott45)
-
-6. [David Mukiibi](https://github.com/davidmukiibi)
-
-7. The amazing [Andela](https://www.andela.com) community.
-
-Facilitators
-
-1. [Chidiebube Amos](https://www.linkedin.com/in/chidiebubeamos/)
-
-2. [Afolabi Badmos](https://www.linkedin.com/in/afolabibadmos/)
-
-
-### License
->The MIT License (MIT)
-
-Copyright (c) 2017 [VOF Team- DevOps]
-
-> Permission is hereby granted, free of charge, to any person obtaining a copy
-> of this software and associated documentation files (the "Software"), to deal
-> in the Software without restriction, including without limitation the rights
-> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-> copies of the Software, and to permit persons to whom the Software is
-> furnished to do so, subject to the following conditions:
->
-> The above copyright notice and this permission notice shall be included in
-> all copies or substantial portions of the Software.
->
-> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-> THE SOFTWARE.

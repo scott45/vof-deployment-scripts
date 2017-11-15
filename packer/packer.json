@@ -36,6 +36,11 @@
       "destination": "/home/vof/vault_token.sh"
 		},
 		{
+			"type": "file",
+			"source": "../shared/account.json",
+      "destination": "/home/vof/account.json"
+		},
+		{
 			"type": "shell",
 			"script": "setup.sh"
 		}

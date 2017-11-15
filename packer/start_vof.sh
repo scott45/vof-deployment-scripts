@@ -11,7 +11,7 @@ get_var() {
 }
 
 export PORT="${PORT:-8080}"
-export RAILS_ENV='$(get_var "railsEnv")'
+export RAILS_ENV="$(get_var "railsEnv")"
 
 create_application_yml() {
   cat <<EOF > /home/vof/app/config/application.yml
@@ -56,12 +56,41 @@ user=vof
 EOF
 }
 
+authenticate_service_account() {
+  if gcloud auth activate-service-account --key-file=/home/vof/account.json; then
+    echo "Service account authentication successful"
+  fi
+}
+
+get_database_dump_file() {
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "prod" ]]; then
+    if gsutil cp gs://vof-database-backup/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
+      echo "Database dump file created succesfully"
+    fi
+  fi
+}
+
 start_app() {
   local app_root="/home/vof/app"
 
   sudo -u vof bash -c "mkdir -p /home/vof/app/log"
-  sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:setup"
-  sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:seed"
+
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "prod"]]; then
+    # One time actions
+    # Check if the database was already imported
+    if export PGPASSWORD=$(get_var "databasePassword"); psql -h $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") -c 'SELECT key FROM ar_internal_metadata' 2>/dev/null | grep environment >/dev/null; then
+      sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:migrate"
+    else
+      # Delete ar_internal_metadata table
+      sudo -u postgres bash -c "export PGPASSWORD=$(get_var "databasePassword"); psql -h  $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") -c 'DROP TABLE ar_internal_metadata'"
+      # Import database dump.
+      sudo -u postgres bash -c "export PGPASSWORD=$(get_var "databasePassword"); psql -h  $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") < /home/vof/vof_${RAILS_ENV}.sql"
+    fi
+  else
+    sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:setup"
+    sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:seed"
+  fi
+
   supervisorctl update && supervisorctl reload
 }
 
@@ -72,10 +101,14 @@ main() {
   create_application_yml
   create_secrets_yml
   create_vof_supervisord_conf
+
+  authenticate_service_account
+  get_database_dump_file
+
   start_app
 
   # Setup Vault
-  source /home/vof/vault_token.sh
+  # source /home/vof/vault_token.sh
 }
 
 main "$@"

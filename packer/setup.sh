@@ -17,7 +17,8 @@ install_system_dependencies() {
   sudo apt-get install -y --no-install-recommends git-core curl zlib1g-dev     \
     build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev \
     sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev wget nodejs     \
-    python-software-properties libffi-dev libpq-dev sudo vim less supervisor jq
+    python-software-properties libffi-dev libpq-dev sudo vim less supervisor jq \
+    postgresql postgresql-contrib
 }
 
 install_ruby(){

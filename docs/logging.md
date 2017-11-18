@@ -34,4 +34,4 @@ Stackdriver and google-fluentd
 - If you are using an image builder like `packer`, do all those steps above, but now in a bash script. This script should then be included in the image that will be built and run, so that when an instance of that image is created, the script is run and allthose configurations take effect and then all you have to do is head to the logging section of the GCP console and the logs will be there.
 
 
-
+`Happy Logging`

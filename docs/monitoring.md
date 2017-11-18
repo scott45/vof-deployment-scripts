@@ -15,4 +15,4 @@ Stackdriver and google-fluentd
 
 - You can set up alert policies too. These alert you when the set thresholds/conditions are violated. The stackdriver web UI is pretty much straight forward on how to set up and confgure. 
 
-## Haapy Monitoring
+`Happy Monitoring`

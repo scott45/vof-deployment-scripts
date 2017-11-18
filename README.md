@@ -28,9 +28,9 @@ The code in this repository aim to bring these benefits to the VOF application. 
 
 ### Contributors
 
-- Kanaiza Flevian
+- [Kanaiza Flevian](https://github.com/FlevianK)
 - [Sebuuma Daniel](https://www.github.com/Sprojects)
 - [Mukiibi David](https://github.com/davidmukiibi)
-- Businge Scott
-- Nana Elizabeth
-- Aoka Victoria
+- [Businge Scott](https://github.com/scott45)
+- [Nana Elizabeth](https://github.com/natalie-elizabeth)
+- [Aoka Victoria](https://github.com/victoriaaoka)

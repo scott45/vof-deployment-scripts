@@ -12,14 +12,14 @@ Stackdriver and google-fluentd
 - For this project we used terraform to build our VPC, just like documentation states [here](https://www.terraform.io/docs/providers/google/r/compute_instance.html), i added the `service account` argument to the instance template resource, then added the email of the service account i created and added the logging and monitoring scopes too. This is enough to give logging and monitoring permissions to all our instances that will be created.
 
 - If you are not using an image builder like packer, SSH into the VM instance and `cd` into `/etc/google-fluentd/config.d` folder. Create a `*.conf` file. This file will hold the application logging configurations. The configurations look like;
-                <source>
-                    @type tail
+               `<source>
+    @type tail
                     format none
                     path /home/vof/app/log/development.log
                     pos_file /var/lib/google-fluentd/pos/vof.pos
                     read_from_head true
                     tag vof_development_logs
-                </source>
+                </source>`
 		
 - Save the file and cd into `/var/lib/google-fluentd/pos` folder and add a `*.pos` file, this is the file fluentd uses to track the last read position of the log files. It can hold many log file "last read" positions, so one file can hold all your logs position configurations.
 

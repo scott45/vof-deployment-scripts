@@ -5,7 +5,7 @@ Stackdriver and google-fluentd
 
 ## Setting Up Logging for VOF using Google Stackdriver and Google-fluentd
 
-- Create a [service account](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances) with keys that have logging roles included. Make sure to explicitly tell the instance which service account to use as explained [here](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances), else it will use the default service account. But If you do not wish to create a new service account(bad practice), add the logging and monitoring permission onto the default service account.
+- Create a [service account](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances) with keys that have logging roles included. Make sure to explicitly tell the instance which service account to use as explained [here](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances), else it will use the default service account. But If you do not wish to create a new service account(bad practice), add the logging permission onto the default service account.
 
 - Install the Stackdriver gem in the VM instance of the application. Details on this are available on `https://cloud.google.com/error-reporting/docs/setup/ruby`. For this application, the Stackdriver Gem installation is included in the `setup.sh` file which includes all gems that are required to run VOF. Additionally add the logging agent as explained [here](https://cloud.google.com/monitoring/agent/install-agent) to the same file, as this will install them.
 

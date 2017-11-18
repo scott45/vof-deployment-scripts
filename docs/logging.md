@@ -20,6 +20,8 @@ Stackdriver and google-fluentd
                     read_from_head true
                     tag vof_development_logs
                 </source>`
+
+- For a reference on how to write this configuration file, follwo [this](https://docs.fluentd.org/v0.12/articles/config-file)
 		
 - Save the file and cd into `/var/lib/google-fluentd/pos` folder and add a `*.pos` file, this is the file fluentd uses to track the last read position of the log files. It can hold many log file "last read" positions, so one file can hold all your logs position configurations.
 

@@ -1,7 +1,8 @@
 {
 	"variables": {
 		"service_account_json": "../shared/account.json",
-		"vof_path" : "/home/circleci/vof" 
+		"vof_path" : "{{env `VOF_PATH`}}",
+		"env_name" : "{{env `RAILS_ENV`}}"
 	},
 	"builders": [
 		{
@@ -14,7 +15,7 @@
 			"ssh_username": "vof",
 			"image_description": "vof image for ruby on rails application",
 			"image_family": "ubuntu-1604-lts",
-			"image_name": "daniel-vof-image-ruby-{{timestamp}}",
+			"image_name": "{{user `env_name`}}-vof-image-ruby-{{timestamp}}",
 			"disk_size": 10,
 			"account_file": "{{ user `service_account_json`}}"
 		}
@@ -24,6 +25,10 @@
 			"type": "file",
 			"source": "{{user `vof_path`}}",
       		        "destination": "/home/vof/app"
+		},
+		{
+			"type": "shell",
+			"script": "setup.sh"
 		},
 		{
 			"type": "file",
@@ -36,8 +41,10 @@
       "destination": "/home/vof/vault_token.sh"
 		},
 		{
-			"type": "shell",
-			"script": "setup.sh"
+			"type": "file",
+			"source": "{{ user `service_account_json`}}",
+            "destination": "/home/vof/account.json"
 		}
+		
 	]
 }

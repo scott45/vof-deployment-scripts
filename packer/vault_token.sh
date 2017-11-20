@@ -8,7 +8,7 @@ set -e
 set -o pipefail
 
 # Declare params that can be set by
-export VAULT_ADDR="${VAULT_ADDR:-https://35.202.192.195:8200}"
+export VAULT_ADDR="${VAULT_ADDR:-https://35.184.104.15:8200}"
 export USERNAME="${USERNAME:-deployer}"
 export PASSWORD="${PASSWORD:-deployer}"
 

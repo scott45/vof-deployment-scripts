@@ -1,6 +1,6 @@
 # vault service ip
 resource "google_compute_address" "vault_service" {
-    name = "vault-service"
+   name = "vault-service"
 }
 
 output "vault_service_ip" {

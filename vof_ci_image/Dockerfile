@@ -1,6 +1,6 @@
 # Custom Dockerfile with packer & terraform
 #
-FROM circleci/python:2.7.13
+FROM circleci/ruby:2.4.1-browsers
 
 USER root
 

@@ -62,6 +62,17 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   lifecycle {
     create_before_destroy = true
   }
+
+  # the email is the service account email whose service keys have all the roles suffiecient enough
+  # for the project to interract with all the APIs it does interract with.
+  # the scopes are those that we need for logging and monitoring, they are a must for logging to 
+  # be carried out. 
+  # the whole service account argument is required for identity and authentication reasons, if it is
+  # not included here, the default service account is used instead.
+  service_account {
+    email = "wednesday-logging-keys@vof-migration-test.iam.gserviceaccount.com"
+    scopes = ["https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/logging.read", "https://www.googleapis.com/auth/logging.write"]
+  }
 }
 
 resource "google_compute_autoscaler" "vof-app-autoscaler" {

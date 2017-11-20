@@ -31,6 +31,10 @@ variable "cluster_name" {
     default = "vault"
 }
 
+variable "state_path" {
+    default = "state/vault/terraform.tfstate"
+}
+
 variable "cloud_config_template" {
     default = "artifacts/cloud_config.yaml.tpl"
 }

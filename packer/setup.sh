@@ -62,6 +62,13 @@ setup_vof_code() {
   cd /home/vof/app && bundle install
 }
 
+install_logging_agent(){
+  # This installs the logging agent into the VM
+  
+  curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
+  sudo bash install-logging-agent.sh
+}
+
 main() {
   create_vof_user
 
@@ -73,6 +80,7 @@ main() {
   rm -r /tmp/workdir
 
   setup_vof_code
+  install_logging_agent
   start_supervisor_service
 }
 

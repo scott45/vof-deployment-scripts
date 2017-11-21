@@ -18,7 +18,7 @@ Stackdriver and google-fluentd
 
 ## Usage of Stackdriver
 - On the Stackdriver home page, there are a number of things that you can interact with such as buttons for `Create Check`, `Create Policy` and `Create Dashboard`. 
-![screenshot](/screenshots/1.png) 
+![screenshot](vof-terraform/docs/screenshots/1.png) 
 - For this project, an uptime health check is used monitor the uptime health of the application by sending a  request to a URL, a VM instance, or other resource on a regular basis. If the resource fails to successfully respond to a request sent from at least two geographic locations, the uptime check fails. 
 ![screenshot]() 
 - In this case, a HTTP uptime check is set and from the look of things, it passes in all regions making it successful. 

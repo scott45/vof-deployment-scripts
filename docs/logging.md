@@ -19,7 +19,7 @@ Stackdriver and google-fluentd
                     pos_file /var/lib/google-fluentd/pos/vof.pos
                     read_from_head true
                     tag vof_development_logs
-               > </source>
+                </source>
 
 - For a reference on how to write this configuration file, follwo [this](https://docs.fluentd.org/v0.12/articles/config-file)
 		

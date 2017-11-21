@@ -22,7 +22,8 @@ The code in this repository aim to bring these benefits to the VOF application. 
 - [Environment Creation](docs/environment.md)
 - [Secret Management](docs/secret_management.md)
 - [Release management](docs/release.md)
-- [Monitoring and Logging](docs/monitoring_logging.md)
+- [Monitoring](docs/monitoring.md)
+- [Logging](docs/logging.md)
 - [DNS](docs/dns.md)
 - [Maintenance](docs/maintenance.md)
 

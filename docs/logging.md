@@ -12,14 +12,14 @@ Stackdriver and google-fluentd
 - For this project we used [Terraform](https://www.terraform.io) to build our VPC, just like documentation states [here](https://www.terraform.io/docs/providers/google/r/compute_instance.html), i added the `service account` argument to the instance template resource, then added the email of the [service account](https://www.packer.io/docs/builders/googlecompute.html) i created and added the logging [scope](https://cloud.google.com/logging/docs/access-control) too. This is enough to give logging permissions to all our instances that will be created.
 
 - If you are not using an image builder like packer, SSH into the VM instance and `cd` into `/etc/google-fluentd/config.d` folder. Create a `*.conf` file. This file will hold the application logging configurations. The configurations look like;
-               `<source>
-    @type tail
+               > <source>
+                    @type tail
                     format none
                     path /home/vof/app/log/development.log
                     pos_file /var/lib/google-fluentd/pos/vof.pos
                     read_from_head true
                     tag vof_development_logs
-                </source>`
+               > </source>
 
 - For a reference on how to write this configuration file, follwo [this](https://docs.fluentd.org/v0.12/articles/config-file)
 		

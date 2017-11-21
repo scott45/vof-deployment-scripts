@@ -45,7 +45,7 @@ create_log_files() {
 create_vof_supervisord_conf() {
   sudo cat <<EOF > /etc/supervisor/conf.d/vof.conf
 [program:vof]
-command=/usr/bin/env RAILS_ENV=${RAILS_ENV} PORT=${PORT} /usr/bin/nohup /usr/local/bin/bundle exec puma -C config/puma.rb
+command=/usr/bin/env RAILS_ENV=${RAILS_ENV} PORT=${PORT} RAILS_SERVE_STATIC_FILES=true /usr/bin/nohup /usr/local/bin/bundle exec puma -C config/puma.rb
 directory=/home/vof/app
 autostart=true
 autorestart=true
@@ -63,7 +63,7 @@ authenticate_service_account() {
 }
 
 get_database_dump_file() {
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "prod" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" ]]; then
     if gsutil cp gs://vof-database-backup/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
       echo "Database dump file created succesfully"
     fi
@@ -75,7 +75,7 @@ start_app() {
 
   sudo -u vof bash -c "mkdir -p /home/vof/app/log"
 
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "prod" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" ]]; then
     # One time actions
     # Check if the database was already imported
     if export PGPASSWORD=$(get_var "databasePassword"); psql -h $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") -c 'SELECT key FROM ar_internal_metadata' 2>/dev/null | grep environment >/dev/null; then

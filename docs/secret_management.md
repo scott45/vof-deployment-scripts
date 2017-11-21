@@ -13,12 +13,12 @@
 - Clone the infrastructure repository to your local box
 - Download the json credentials from the VOF project console on Google Cloud Platform.
 - Add the credentials to the `shared/account.json` file.
-- Run the following commands 
+- Run the following commands
 	- `cd vault/tf`
-	- `terraform init`
-	- `terraform plan`
-	- `terraform apply`
-- This series of commands will deploy the vault infrastructure to the GCP account
+	- `export TF_VAR_vault_state_path=<gcs/path/to/terraform.tfstate>` default is state/vault/terraform.tfstate
+	- `terraform init -backend-config="path=$TF_VAR_vault_state_path"`
+	- `terraform apply -var="state_path=$TF_VAR_vault_state_path"`
+- These series of commands will deploy the vault infrastructure to the GCP account
 
 
 ## Logging into Vault

@@ -14,8 +14,8 @@ Stackdriver and google-fluentd
 - If you are not using an image builder like packer, SSH into the VM instance and `cd` into `/etc/google-fluentd/config.d` folder. Create a `*.conf` file. This file will hold the application logging configurations. The configurations look like below but enclose between a `source` tag;
 
 >   @type tail
-    format none
-    path /home/vof/app/log/development.log
+    *format none
+    *path /home/vof/app/log/development.log
     pos_file /var/lib/google-fluentd/pos/vof.pos
     read_from_head true
     tag vof_development_logs

@@ -37,6 +37,7 @@ Stackdriver and google-fluentd
 
 - Here’s how to create a policy:
 ![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/4.png) 
+
 - On Conditions, you can create a condition by declaring the different metrics that need be monitored such as metric threshold, metric absence, metric rate of change, uptime health check and process health. Since `VOF HTTP UPTIME CHECK` was created, an uptime health check is created to check that the resource does not fail to successfully respond to a request sent from at least two geographical locations.
 
 ![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/5.png) 
@@ -51,11 +52,30 @@ Stackdriver and google-fluentd
 
 ![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/7.png) 
 
-- To monitor metric absence, click on the second basic type and the resulting screen will look like this: 
+- It is also possible to set monitoring for Disk Read Write in the Metric Threshold by selecting from the dropdown list under `IF METRIC`. The result will look like this:
+
+![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/9.png) 
+
+- To monitor metric absence, click on the second basic type and the resulting screen will look like this:
+
+![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/13.png) 
+
+- For example, an alert is triggered if there is no outgoing traffic for a period of 30 minutes.
+
+- To observe Metric Rate of Change, select the third option on Basic Types which is quite similar to setting the other metrics. In this case, there is no graph to show anything just adjustable metrics to be observed.
 
 ![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/8.png) 
 
-- For example, an alert is triggered if there is no outgoing traffic for a period of 30 minutes.
+- There is a documentation part which should have the details of all the policies included to bring clarity to those who might be new to the team with little to no understanding of the error alerts.
+
+![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/12.png) 
+
+- A view of all the policies will be on the `Policies Overview` page which open when you select on it from the Alerting that is on the left of the screen
+
+![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/14.png) 
+
+- You can create as many policies as you want separately especially if you have more than one environment. This will help in identifying where exactly a problem is arising from.
+
 
 
 `Happy Monitoring`

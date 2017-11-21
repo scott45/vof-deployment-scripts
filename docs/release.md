@@ -18,7 +18,6 @@ Developers should be able to continuously deploy new changes to the application 
 
 - During deployments the application should have zero downtime.
 
-
 ### Solution
 Pipeline Steps
 - changes are pushed to the VOF git repository.

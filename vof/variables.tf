@@ -8,11 +8,6 @@ variable "zone" {
   default = "europe-west1-b"
 }
 
-variable "vof_host" {
-  type = "string"
-  default = "105.21.32.62"
-}
-
 variable "reserved_env_ip" {}
 
 variable "project_id" {

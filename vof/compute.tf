@@ -71,7 +71,8 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   # not included here, the default service account is used instead.
   service_account {
     email = "wednesday-logging-keys@vof-migration-test.iam.gserviceaccount.com"
-    scopes = ["https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/logging.read", "https://www.googleapis.com/auth/logging.write"]
+    scopes = ["https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/cloud-platform", 
+    "https://www.googleapis.com/auth/logging.read", "https://www.googleapis.com/auth/logging.write"]
   }
 }
 

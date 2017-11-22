@@ -1,13 +1,25 @@
 resource "google_compute_global_forwarding_rule" "vof-http" {
   name       = "${var.env_name}-vof-http"
   ip_address = "${var.reserved_env_ip}"
-  target     = "${google_compute_target_http_proxy.vof-http-proxy.self_link}"
-  port_range = "80"
+  target     = "${google_compute_target_https_proxy.vof-https-proxy.self_link}"
+  port_range = "443"
 }
 
-resource "google_compute_target_http_proxy" "vof-http-proxy" {
-  name        = "${var.env_name}-vof-proxy"
-  url_map     = "${google_compute_url_map.vof-http-url-map.self_link}"
+resource "google_compute_ssl_certificate" "vof-ssl-certificate" {
+  name_prefix = "vof-certificate-"
+  description = "VOF HTTPS certificate"
+  private_key = "${file("../shared/andela_key.key")}"
+  certificate = "${file("../shared/andela_certificate.crt")}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "google_compute_target_https_proxy" "vof-https-proxy" {
+  name = "${var.env_name}-vof-https-proxy"
+  url_map = "${google_compute_url_map.vof-http-url-map.self_link}"
+  ssl_certificates = ["${google_compute_ssl_certificate.vof-ssl-certificate.self_link}"]
 }
 
 resource "google_compute_url_map" "vof-http-url-map" {

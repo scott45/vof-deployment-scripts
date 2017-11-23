@@ -1,6 +1,6 @@
 # Custom Dockerfile with packer & terraform
 #
-FROM circleci/ruby:2.4.1-browsers
+FROM circleci/ruby:2.4.1-node-browsers
 
 USER root
 

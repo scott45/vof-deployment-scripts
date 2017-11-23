@@ -46,7 +46,7 @@ resource "google_sql_user" "vof-database-user" {
   name = "${random_id.vof-db-user.b64}"
   password = "${random_id.vof-db-user-password.b64}"
   instance = "${google_sql_database_instance.vof-database-instance.name}"
-  host = "${var.vof_host}"
+  host = ""
 }
 
 output "vof_db_user_name" {

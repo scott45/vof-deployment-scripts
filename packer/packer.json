@@ -2,12 +2,13 @@
 	"variables": {
 		"service_account_json": "../shared/account.json",
 		"vof_path" : "{{env `VOF_PATH`}}",
-		"env_name" : "{{env `RAILS_ENV`}}"
+		"env_name" : "{{env `RAILS_ENV`}}",
+		"project_id": "{{env `PROJECT_ID`}}"
 	},
 	"builders": [
 		{
 			"type": "googlecompute",
-			"project_id": "vof-migration-test",
+			"project_id": "{{user `project_id`}}",
 			"machine_type": "n1-standard-1",
 			"source_image": "ubuntu-1604-xenial-v20170815a",
 			"region": "europe-west1",

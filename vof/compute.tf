@@ -70,7 +70,7 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   # the whole service account argument is required for identity and authentication reasons, if it is
   # not included here, the default service account is used instead.
   service_account {
-    email = "wednesday-logging-keys@vof-migration-test.iam.gserviceaccount.com"
+    email = "${var.service_account_email}"
     scopes = ["https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/logging.read", "https://www.googleapis.com/auth/logging.write"]
   }
 }

@@ -126,3 +126,7 @@ variable "db_master_replica_password" {
   type = "string"
   default = "vof-replica"
 }
+
+variable "service_account_email" {
+  type = "string"
+}

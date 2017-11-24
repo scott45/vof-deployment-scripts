@@ -10,6 +10,8 @@ variable "zone" {
 
 variable "reserved_env_ip" {}
 
+variable "bucket" {}
+
 variable "project_id" {
   type = "string"
   default = "vof-migration-test"

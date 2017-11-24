@@ -10,6 +10,8 @@ variable "zone" {
 
 variable "reserved_env_ip" {}
 
+variable "bucket" {}
+
 variable "project_id" {
   type = "string"
   default = "vof-migration-test"
@@ -125,4 +127,8 @@ variable "db_master_replica_name" {
 variable "db_master_replica_password" {
   type = "string"
   default = "vof-replica"
+}
+
+variable "service_account_email" {
+  type = "string"
 }

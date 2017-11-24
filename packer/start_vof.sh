@@ -64,7 +64,8 @@ authenticate_service_account() {
 
 get_database_dump_file() {
   if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" ]]; then
-    if gsutil cp gs://vof-database-backup/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
+    export BUCKET_NAME = $(get_var "bucketName")
+    if gsutil cp gs://${BUCKET_NAME}/database-backups/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
       echo "Database dump file created succesfully"
     fi
   fi

@@ -37,7 +37,6 @@ resource "google_compute_instance_template" "vof-app-server-template" {
 
   network_interface {
 	subnetwork = "${google_compute_subnetwork.vof-private-subnetwork.name}"
-	access_config {}
   }
 
   disk {

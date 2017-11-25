@@ -48,7 +48,7 @@ resource "google_compute_firewall" "vof-internal-firewall" {
     ports = ["0-65535"]
   }
 
-  source_ranges = ["${var.ip_cidr_range}"]
+  source_ranges = ["${var.ip_cidr_range}", "${google_compute_instance.vof-jumpbox.network_interface.0.access_config.0.assigned_nat_ip}"]
 }
 
 resource "google_compute_firewall" "vof-public-firewall" {

@@ -10,7 +10,7 @@
 			"type": "googlecompute",
 			"project_id": "{{user `project_id`}}",
 			"machine_type": "n1-standard-1",
-			"source_image": "ubuntu-1604-xenial-v20170815a",
+			"source_image": "vof-base-image-ruby",
 			"region": "europe-west1",
 			"zone": "europe-west1-b",
 			"ssh_username": "vof",

@@ -10,6 +10,13 @@ variable "zone" {
 
 variable "reserved_env_ip" {}
 
+variable "bucket" {}
+
+variable "base_image" {
+  type = "string"
+  default = "ubuntu-1604-xenial-v20170815a"
+}
+
 variable "project_id" {
   type = "string"
   default = "vof-migration-test"

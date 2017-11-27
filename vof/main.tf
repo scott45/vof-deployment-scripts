@@ -6,8 +6,6 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = "vof"
-    project = "vof-migration-test"
     credentials = "../shared/account.json"
   }
 }
@@ -15,7 +13,7 @@ terraform {
 data "terraform_remote_state" "vof" {
   backend = "gcs"
   config {
-    bucket = "vof"
+    bucket = "${var.bucket}"
     path = "${var.state_path}"
     project = "${var.project_id}"
     credentials = "${file("${var.credential_file}")}"

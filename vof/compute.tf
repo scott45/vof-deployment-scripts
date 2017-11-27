@@ -36,8 +36,8 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   tags = ["${var.env_name}-vof-app-server", "vof-app-server"]
 
   network_interface {
-	subnetwork = "${google_compute_subnetwork.vof-private-subnetwork.name}"
-	access_config {}
+    subnetwork = "${google_compute_subnetwork.vof-private-subnetwork.name}"
+    access_config {}
   }
 
   disk {
@@ -55,6 +55,7 @@ resource "google_compute_instance_template" "vof-app-server-template" {
     databasePort = "5432"
     databaseName = "${var.env_name}-vof-database"
     railsEnv = "${var.env_name}"
+    bucketName = "${var.bucket}"
     startup-script = "/home/vof/start_vof.sh"
     serial-port-enable = 1
   }
@@ -71,7 +72,8 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   # not included here, the default service account is used instead.
   service_account {
     email = "${var.service_account_email}"
-    scopes = ["https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/cloud-platform", "https://www.googleapis.com/auth/logging.read", "https://www.googleapis.com/auth/logging.write"]
+    scopes = ["https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/cloud-platform", 
+    "https://www.googleapis.com/auth/logging.read", "https://www.googleapis.com/auth/logging.write"]
   }
 }
 

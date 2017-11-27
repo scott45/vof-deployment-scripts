@@ -48,15 +48,3 @@ resource "google_sql_user" "vof-database-user" {
   instance = "${google_sql_database_instance.vof-database-instance.name}"
   host = ""
 }
-
-output "vof_db_user_name" {
-  value = "${random_id.vof-db-user.b64}"
-}
-
-output "vof_db_user_password" {
-  value = "${random_id.vof-db-user-password.b64}"
-}
-
-output "vof_db_instance_ip" {
-  value = "${google_sql_database_instance.vof-database-instance.ip_address.0.ip_address}"
-}

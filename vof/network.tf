@@ -8,11 +8,3 @@ resource "google_compute_subnetwork" "vof-private-subnetwork" {
   network = "${google_compute_network.vof-network.self_link}"
   ip_cidr_range = "${var.ip_cidr_range}"
 }
-
-output "network_name" {
-  value = "${google_compute_network.vof-network.name}"
-}
-
-output "private_subnetwork_name" {
-  value = "${google_compute_subnetwork.vof-private-subnetwork.name}"
-}

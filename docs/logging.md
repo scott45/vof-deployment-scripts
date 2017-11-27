@@ -1,7 +1,7 @@
 # Logging
 
 ## Tech Stack
-Stackdriver and google-fluentd
+Google-fluentd
 
 ## Setting Up Logging for VOF using Google Stackdriver and Google-fluentd
 

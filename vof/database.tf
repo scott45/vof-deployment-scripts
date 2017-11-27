@@ -18,6 +18,7 @@ resource "google_sql_database_instance" "vof-database-instance" {
 
   settings {
     tier = "${var.db_instance_tier}"
+    disk_autoresize = true
     ip_configuration = {
       ipv4_enabled = true
 

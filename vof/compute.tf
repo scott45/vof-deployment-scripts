@@ -17,7 +17,7 @@ resource "google_compute_instance_group_manager" "vof-app-server-group-manager" 
   base_instance_name = "${var.env_name}-vof-app-instance"
   instance_template = "${google_compute_instance_template.vof-app-server-template.self_link}"
   zone = "${var.zone}"
-  update_strategy = "NONE"
+  update_strategy = "RESTART"
   target_size = 1
 
   named_port {

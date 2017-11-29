@@ -13,8 +13,8 @@ get_var() {
 export PORT="${PORT:-8080}"
 export RAILS_ENV="$(get_var "railsEnv")"
 
-create_application_yml() {
-  cat <<EOF > /home/vof/app/config/application.yml
+update_application_yml() {
+  cat <<EOF >> /home/vof/app/config/application.yml
 API_URL: 'https://api-staging.andela.com/'
 LOGIN_URL: 'https://api-staging.andela.com/login?redirect_url='
 LOGOUT_URL: 'https://api-staging.andela.com/logout?redirect_url='
@@ -164,7 +164,7 @@ main() {
   echo "startup script invoked at $(date)" >> /tmp/script.log
 
   create_log_files
-  create_application_yml
+  update_application_yml
   create_secrets_yml
   create_vof_supervisord_conf
 

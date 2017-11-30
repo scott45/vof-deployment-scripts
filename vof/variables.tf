@@ -42,12 +42,12 @@ variable "state_path" {
 
 variable "max_instances" {
   type = "string"
-  default = "2"
+  default = "4"
 }
 
 variable "min_instances" {
   type = "string"
-  default = "1"
+  default = "2"
 }
 
 variable "vof_disk_image" {

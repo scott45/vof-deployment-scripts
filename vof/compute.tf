@@ -18,7 +18,7 @@ resource "google_compute_instance_group_manager" "vof-app-server-group-manager" 
   instance_template = "${google_compute_instance_template.vof-app-server-template.self_link}"
   zone = "${var.zone}"
   update_strategy = "NONE"
-  target_size = 1
+  target_size = 2
 
   named_port {
     name = "customhttp"

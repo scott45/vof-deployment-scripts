@@ -27,7 +27,7 @@ variable "machine_type" {
   default = "n1-standard-1"
 }
 
-variable "small_machine-type" {
+variable "small_machine_type" {
   type = "string"
   default = "g1-small"
 }

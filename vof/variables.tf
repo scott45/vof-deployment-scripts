@@ -27,6 +27,11 @@ variable "machine_type" {
   default = "n1-standard-1"
 }
 
+variable "small_machine-type" {
+  type = "string"
+  default = "g1-small"
+}
+
 variable "credential_file" {
   type = "string"
   default = "../shared/account.json"

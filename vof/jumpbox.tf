@@ -1,6 +1,6 @@
 resource "google_compute_instance" "vof-jumpbox" {
   name         = "${var.env_name}-jumpbox"
-  machine_type = "${var.machine_type}"
+  machine_type = "${var.small_machine_type}"
   zone = "${var.zone}"
 
   tags = ["${var.env_name}-jumpbox"]

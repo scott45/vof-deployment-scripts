@@ -175,7 +175,7 @@ include /etc/logrotate.d
     weekly
     size 100M
     rotate 4
-    create 0644 root root
+    create 0664 root root
     missingok
     notifempty
 }

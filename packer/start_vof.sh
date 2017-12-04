@@ -220,6 +220,10 @@ main() {
   configure_log_reader_positioning
   restart_google_fuentd
 
+  logrotate_config
+  run_upgrades
+  cron
+
   # Setup Vault
   # source /home/vof/vault_token.sh
 }

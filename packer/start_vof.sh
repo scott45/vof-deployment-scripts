@@ -12,8 +12,8 @@ get_var() {
 
 export PORT="${PORT:-8080}"
 export RAILS_ENV="$(get_var "railsEnv")"
-export SLACK_WEBHOOK="$(get_var "slackWebhook")"
-export SLACK_CHANNEL="$(get_var "slackChannel")"
+sudo echo "export SLACK_WEBHOOK=$(get_var "slackWebhook")" >> /home/vof/.env_setup_rc
+sudo echo "export SLACK_CHANNEL=$(get_var "slackChannel")" >> /home/vof/.env_setup_rc
 
 update_application_yml() {
   cat <<EOF >> /home/vof/app/config/application.yml
@@ -172,7 +172,7 @@ include /etc/logrotate.d
 /home/vof/app/log/staging.log
 /home/vof/app/log/production.log
 {
-    daily
+    weekly
     size 100M
     rotate 4
     create 0644 root root
@@ -194,20 +194,20 @@ include /etc/logrotate.d
 EOF
 
 # Create a cronjob to send slack notifications after running logrotate.
-  cat > logcron <<'EOF'
-0 9 * * * sudo /usr/sbin/logrotate /etc/logrotate.conf --state --force | curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"Logrotate\", \"text\": \"Logs successfully rotated in $(uname -n)\n\", \"icon_emoji\": \":sparkle:\"}" $(echo $SLACK_WEBHOOK) 
+  cat > log_cron <<'EOF'
+0 9 * * 5 /bin/bash -lc 'source /home/vof/.env_setup_rc; curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"Logrotate\", \"text\": \"*Logs successfully rotated in $(uname -n)*\n>>>$(sudo /usr/sbin/logrotate /etc/logrotate.conf --state --force)\", \"icon_emoji\": \":sparkle:\"}" $(echo $SLACK_WEBHOOK)'
 EOF
 }
 
 create_unattended_upgrades_cronjob() {
   cat > upgrades_cron <<'EOF'
-0 9 * * * curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"unattended-upgrades\", \"text\": \"*Unattended upgrades report from $(uname -n)*\n>>>$(sudo unattended-upgrade -v)\", \"icon_emoji\": \":bell:\"}" $(echo $SLACK_WEBHOOK)
+0 9 * * 5 /bin/bash -lc 'source /home/vof/.env_setup_rc; curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"unattended-upgrades\", \"text\": \"*Unattended upgrades report from $(uname -n)*\n>>>$(sudo unattended-upgrade -v)\", \"icon_emoji\": \":bell:\"}" $(echo $SLACK_WEBHOOK)'
 EOF
 
 }
 update_crontab() {
-  cat upgrades_cron logcron | crontab
-  rm upgrades_cron logcron
+  cat upgrades_cron log_cron | crontab
+  rm upgrades_cron log_cron
 }
 
 

@@ -12,6 +12,8 @@ get_var() {
 
 export PORT="${PORT:-8080}"
 export RAILS_ENV="$(get_var "railsEnv")"
+export SLACK_WEBHOOK="$(get_var "slackWebhook")"
+export SLACK_CHANNEL="$(get_var "slackChannel")"
 
 update_application_yml() {
   cat <<EOF >> /home/vof/app/config/application.yml
@@ -160,12 +162,15 @@ restart_google_fuentd(){
   sudo service google-fluentd restart
 }
 
-logrotate_config() {
+configure_logrotate() {
+# Configure logrotate.
   cat <<EOF > /etc/logrotate.conf
 su root root
 include /etc/logrotate.d
 /var/log/vof/vof.out.log
 /var/log/vof/vof.err.log
+/home/vof/app/log/staging.log
+/home/vof/app/log/production.log
 {
     daily
     size 100M
@@ -187,20 +192,22 @@ include /etc/logrotate.d
     rotate 1
 }
 EOF
+
+# Create a cronjob to send slack notifications after running logrotate.
   cat > logcron <<'EOF'
-0 9 * * * sudo /usr/sbin/logrotate /etc/logrotate.conf --state --force | curl -X POST --data-urlencode "payload={\"channel\": \"#channel\", \"username\": \"Logrotate\", \"text\": \"Logs successfully rotated in $(uname -n)\n\", \"icon_emoji\": \":sparkle:\"}" ${var.slack_hook_url}
+0 9 * * * sudo /usr/sbin/logrotate /etc/logrotate.conf --state --force | curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"Logrotate\", \"text\": \"Logs successfully rotated in $(uname -n)\n\", \"icon_emoji\": \":sparkle:\"}" $(echo $SLACK_WEBHOOK) 
 EOF
 }
 
-run_upgrades() {
-  cat > mycron <<'EOF'
-0 9 * * * curl -X POST --data-urlencode "payload={\"channel\": \"#channel\", \"username\": \"unattended-upgrades\", \"text\": \"*Unattended upgrades report from $(uname -n)*\n>>>$(sudo unattended-upgrade -v)\", \"icon_emoji\": \":bell:\"}" ${var.slack_hook_url}
+create_unattended_upgrades_cronjob() {
+  cat > upgrades_cron <<'EOF'
+0 9 * * * curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"unattended-upgrades\", \"text\": \"*Unattended upgrades report from $(uname -n)*\n>>>$(sudo unattended-upgrade -v)\", \"icon_emoji\": \":bell:\"}" $(echo $SLACK_WEBHOOK)
 EOF
 
 }
-cron(){
-  cat mycron logcron | crontab
-  rm mycron logcron
+update_crontab() {
+  cat upgrades_cron logcron | crontab
+  rm upgrades_cron logcron
 }
 
 
@@ -220,9 +227,9 @@ main() {
   configure_log_reader_positioning
   restart_google_fuentd
 
-  logrotate_config
-  run_upgrades
-  cron
+  configure_logrotate
+  create_unattended_upgrades_cronjob
+  update_crontab
 
   # Setup Vault
   # source /home/vof/vault_token.sh

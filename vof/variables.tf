@@ -142,3 +142,7 @@ variable "db_master_replica_password" {
 variable "service_account_email" {
   type = "string"
 }
+
+variable "slack_hook_url" {
+  type = "string"
+}

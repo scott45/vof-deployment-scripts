@@ -52,6 +52,12 @@ install_vof_ruby_dependencies() {
   fi
 }
 
+install_logging_agent(){
+  # This installs the logging agent into the VM
+  curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh
+  sudo bash install-logging-agent.sh
+}
+
 start_supervisor_service() {
   sudo service supervisor start
 }
@@ -63,6 +69,7 @@ main() {
   pushd /tmp/workdir
     install_ruby
     install_vof_ruby_dependencies
+    install_logging_agent
   popd
   rm -r /tmp/workdir
 

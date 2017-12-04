@@ -143,6 +143,11 @@ variable "service_account_email" {
   type = "string"
 }
 
-variable "slack_hook_url" {
+variable "slack_webhook_url" {
   type = "string"
+}
+
+variable "slack_channel" {
+  type = "string"
+  default = "vof"
 }

@@ -56,6 +56,8 @@ resource "google_compute_instance_template" "vof-app-server-template" {
     databaseName = "${var.env_name}-vof-database"
     railsEnv = "${var.env_name}"
     bucketName = "${var.bucket}"
+    slackChannel = "${var.slack_channel}"
+    slackWebhook = "${var.slack_webhook_url}"
     startup-script = "/home/vof/start_vof.sh"
     serial-port-enable = 1
   }

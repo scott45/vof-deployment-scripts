@@ -12,6 +12,8 @@ get_var() {
 
 export PORT="${PORT:-8080}"
 export RAILS_ENV="$(get_var "railsEnv")"
+sudo echo "export SLACK_WEBHOOK=$(get_var "slackWebhook")" >> /home/vof/.env_setup_rc
+sudo echo "export SLACK_CHANNEL=$(get_var "slackChannel")" >> /home/vof/.env_setup_rc
 
 update_application_yml() {
   cat <<EOF >> /home/vof/app/config/application.yml
@@ -160,6 +162,55 @@ restart_google_fuentd(){
   sudo service google-fluentd restart
 }
 
+configure_logrotate() {
+# Configure logrotate.
+  cat <<EOF > /etc/logrotate.conf
+su root root
+include /etc/logrotate.d
+/var/log/vof/vof.out.log
+/var/log/vof/vof.err.log
+/home/vof/app/log/staging.log
+/home/vof/app/log/production.log
+{
+    weekly
+    size 100M
+    rotate 4
+    create 0644 root root
+    missingok
+    notifempty
+}
+/var/log/wtmp {
+    missingok
+    monthly
+    create 0664 root utmp
+    rotate 1
+}
+/var/log/btmp {
+    missingok
+    monthly
+    create 0660 root utmp
+    rotate 1
+}
+EOF
+
+# Create a cronjob to send slack notifications after running logrotate.
+  cat > log_cron <<'EOF'
+0 9 * * 5 /bin/bash -lc 'source /home/vof/.env_setup_rc; curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"Logrotate\", \"text\": \"*Logs successfully rotated in $(uname -n)*\n>>>$(sudo /usr/sbin/logrotate /etc/logrotate.conf --state --force)\", \"icon_emoji\": \":sparkle:\"}" $(echo $SLACK_WEBHOOK)'
+EOF
+}
+
+create_unattended_upgrades_cronjob() {
+  cat > upgrades_cron <<'EOF'
+0 9 * * 5 /bin/bash -lc 'source /home/vof/.env_setup_rc; curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"unattended-upgrades\", \"text\": \"*Unattended upgrades report from $(uname -n)*\n>>>$(sudo unattended-upgrade -v)\", \"icon_emoji\": \":bell:\"}" $(echo $SLACK_WEBHOOK)'
+EOF
+
+}
+update_crontab() {
+  cat upgrades_cron log_cron | crontab
+  rm upgrades_cron log_cron
+}
+
+
 main() {
   echo "startup script invoked at $(date)" >> /tmp/script.log
 
@@ -175,6 +226,10 @@ main() {
   configure_google_fluentd_logging
   configure_log_reader_positioning
   restart_google_fuentd
+
+  configure_logrotate
+  create_unattended_upgrades_cronjob
+  update_crontab
 
   # Setup Vault
   # source /home/vof/vault_token.sh

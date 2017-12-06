@@ -205,9 +205,18 @@ create_unattended_upgrades_cronjob() {
 EOF
 
 }
+
+# Reason: When the logs are successfully rotated, the newly setup log files can't be written by the current rails app 
+# instance so supervisord is reload through this cron so that the app starts writing the log to the new log file.
+create_supervisord_cronjob() {
+  cat > supervisord_cron <<'EOF'
+01 9 * * 5 supervisorctl update && supervisorctl reload
+EOF
+}
+
 update_crontab() {
-  cat upgrades_cron log_cron | crontab
-  rm upgrades_cron log_cron
+  cat upgrades_cron log_cron supervisord_cron | crontab
+  rm upgrades_cron log_cron supervisord_cron
 }
 
 
@@ -229,6 +238,7 @@ main() {
 
   configure_logrotate
   create_unattended_upgrades_cronjob
+  create_supervisord_cronjob
   update_crontab
 
   # Setup Vault

@@ -173,7 +173,7 @@ include /etc/logrotate.d
 /home/vof/app/log/production.log
 {
     weekly
-    size 100M
+    size 250M
     rotate 4
     create 0664 vof vof
     missingok
@@ -210,7 +210,7 @@ EOF
 # instance so supervisord is reload through this cron so that the app starts writing the log to the new log file.
 create_supervisord_cronjob() {
   cat > supervisord_cron <<'EOF'
-01 9 * * 5 supervisorctl update && supervisorctl reload
+1 9 * * * supervisorctl update && supervisorctl reload
 EOF
 }
 

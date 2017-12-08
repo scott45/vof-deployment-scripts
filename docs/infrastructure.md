@@ -3,7 +3,7 @@
 ## Setup and utilization
 
 ### Infrastructure code
-The infrasctructure code is devided into 2 main branches, `master` and `develop`. These are their characteristics;
+The infrastructure code is devided into 2 main branches, `master` and `develop`. These are their characteristics;
 - Both branches are protected so you can not push changes directly to them. A feature/chore and bug branches in the format of `ft-name-of-feature`, `ch-name-of-chore` and `bug-name-of-bug` will be created and when ready a PR raised when attempting to make updates to the main branches.
 - The `develop` branch has cutting edge changes to the infrastructure and only affects the `vof-migration-test` GCP project where infrastructure changes can be deployed and tested.
 - The `master` branch contains the code promoted from `develop` and is what the production `vof-tracker` project uses. Be very careful with it.
@@ -27,14 +27,14 @@ Below are the required environments variables that should be set for the pipelin
 5. **PRODUCTION_MAX_INSTANCES**: Maximum number of Virtual Machines(VM) that the production environment can scale to in case of high traffic to the site.   
 6. **PRODUCTION_RESERVED_IP**: GCP VOF project's production environment reserved global static IP.  
 7. **SERVICE_ACCOUNT**: Service account with a privileged IAM role that allows the deployment script to setup the network on the GCP project.   
-8 **SERVICE_ACCOUNT_EMAIL**: Email address that comes with the service account.
+8. **SERVICE_ACCOUNT_EMAIL**: Email address that comes with the service account.
 9. **SLACK_CHANNEL**: Slack channel where to send success or failure messages from the pipeline.
 10. **SLACK_CHANNEL_HOOK**: Webhook that will allow the pipeline to sent messages to the slack channel above.   
 11. **STAGING_ENVS**: Setting the environment variables to be added to the staging app's `application.yml` file.
 12. **STAGING_RESERVED_IP**: GCP VOF project's staging environment reserved global static IP.
 13. **VOF_INFRASTRUCTURE_REPO**: Github link to the VOF infrastructure codebase.
 
-##### Setting production and staging run-time environment variables in CircleCI
+#### Setting production and staging run-time environment variables in CircleCI
 ![production_envs](screenshots/production_envs.png?raw=true "Setting production environment variables")
 
 ![staging_envs](screenshots/staging_envs.png?raw=true "Setting staging environment variables")
@@ -44,11 +44,11 @@ Below are the required environments variables that should be set for the pipelin
 - This can also be done on Google Console. Each environment has a jumpbox VM that can gain SSH access to the VOF application VMs.
 
 #### Usage
-- `gcloud init` - To setup the default GCP project that you will be working with from the local box. This has to be run again if you have other projects you want access to.
-- `gcloud compute ssh <firstname_lastname>@staging_jumpbox --zone europe-west1-b` - To gain access to the staging environment jumpbox
-- - `gcloud compute ssh <firstname_lastname>@production_jumpbox --zone europe-west1-b` - To gain access to the production environment jumpbox
-- `gcloud compute instances list` - To list all VMs on the network.
-- `gcloud compute ssh <firstname_lastname>@<name_of_vm> --zone europe-west1-b`- To gain access to a specific VM listed by the previous command. Depending on which jumpbox you SSHed into, you will only be able to access the VMs of that specific environment i.e either staging or production.
+- `gcloud init`: To setup the default GCP project that you will be working with from the local box. This has to be run again if you have other projects you want access to.
+- `gcloud compute ssh <firstname_lastname>@staging_jumpbox --zone europe-west1-b`: To gain access to the staging environment jumpbox
+- `gcloud compute ssh <firstname_lastname>@production_jumpbox --zone europe-west1-b`: To gain access to the production environment jumpbox
+- `gcloud compute instances list`: To list all VMs on the network.
+- `gcloud compute ssh <firstname_lastname>@<name_of_vm> --zone europe-west1-b`: To gain access to a specific VM listed by the previous command. Depending on which jumpbox you SSHed into, you will only be able to access the VMs of that specific environment i.e either staging or production.
 
 ## Infrastructure code content
 From this point onwards the documentation aims to guide any DevOps engineers that join the VOF team through how exactly the infrastructure files come together and what they do. The following describes what each terraform file/script does when setting up the infrastructure;

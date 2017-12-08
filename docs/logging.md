@@ -1,11 +1,11 @@
 # Logging
 
 ## Tech Stack
-Google-fluentd
+- Google-fluentd
 
 ## Setting Up Logging for VOF using Google Stackdriver and Google-fluentd
 
-# Prerequisites
+### Prerequisites
 
 - Create a [service account](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances) that has logging roles enabled.
 
@@ -24,7 +24,8 @@ Google-fluentd
 
 ![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/editing_roles1.png)
 
-# Enabling logging for your application and VM instances
+
+### Enabling logging for your application and VM instances
 
 - 1. For this project we used [Terraform](https://www.terraform.io) to build our VPC, just like documentation states [here](https://www.terraform.io/docs/providers/google/r/compute_instance.html), add the `service account` argument to the instance template resource in the terraform script, then add the email of the [service account](https://www.packer.io/docs/builders/googlecompute.html) that has the logging roles as demonstrated above then  add the logging scopes too as explained [here](https://cloud.google.com/logging/docs/access-control). This is enough to give logging permissions to all our instances that will be created.
 

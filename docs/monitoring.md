@@ -1,9 +1,12 @@
 # Monitoring
 
-## Tech Stack
-Stackdriver and google-fluentd
+### Tech Stack
 
-## Setting Up Monitoring for VOF using Google Stackdriver and Google-Fluentd
+- Stackdriver 
+- google-fluentd
+
+
+### Setting Up Monitoring for VOF using Google Stackdriver and Google-Fluentd
 
 - Create a [service account](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances) with keys that have monitoring roles included. Make sure to explicitly tell the instance which service account to use as explained [here](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances), else it will use the default service account. But If you do not wish to create a new service account(bad practice), add the monitoring permission onto the default service account.
 
@@ -16,7 +19,7 @@ Stackdriver and google-fluentd
 - You can set up alert policies too. These alert you when the set thresholds/conditions are violated. The stackdriver web UI is pretty much straight forward on how to set up and confgure. 
 
 
-## Usage of Stackdriver
+### Usage
 - On the Stackdriver home page, there are a number of things that you can interact with such as buttons for `Create Check`, `Create Policy` and `Create Dashboard`. 
 
 ![screenshot](https://github.com/FlevianK/vof-terraform/blob/master/docs/screenshots/1.png) 

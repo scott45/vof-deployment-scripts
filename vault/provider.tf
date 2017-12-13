@@ -9,7 +9,7 @@ terraform {
   backend "gcs" {
     bucket = "vof"
     project = "vof-migration-test"
-    credentials = "../../shared/account.json"
+    credentials = "../shared/account.json"
   }
 }
 

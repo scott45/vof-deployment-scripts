@@ -19,7 +19,6 @@ resource "google_compute_instance_group_manager" "vof-app-server-group-manager" 
   zone = "${var.zone}"
   update_strategy = "NONE"
   target_pools = ["${google_compute_target_pool.default.self_link}"]
-  target_size = 2
 
   named_port {
     name = "customhttp"

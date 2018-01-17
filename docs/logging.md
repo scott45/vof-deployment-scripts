@@ -9,20 +9,20 @@
 
 - Create a [service account](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances) that has logging roles enabled.
 
-![screenshot](https://github.com/andela/vof-deployment-scripts/blob/master/docs/screenshots/logging_roles1.png)
+![screenshot](screenshots/logging_roles1.png?raw=true "Logging Roles in Service Account")
 - This can be done in the IAM section of the GCP [console](console.clound.google.com).
 
-![screenshot](https://github.com/andela/vof-deployment-scripts/blob/master/docs/screenshots/iam_menu1.png)
+![screenshot](screenshots/iam_menu1.png?raw=true "The IAM Menu on GCP")
 
 - As you create the service account, do not forget to download the service account keys. As these are the ones that grant access to any cloud resources your machines or application wishes to make use of. If you see a page such as this:
 
-![screenshot](https://github.com/andela/vof-deployment-scripts/blob/master/docs/screenshots/choose_right_project1.png)
+![screenshot](screenshots/choose_right_project1.png?raw=true "Choosing the Right Project")
 
 - Make sure you are accessing the correct project and if you already are, double check if you have admin right to that project.
 
 - Make sure to explicitly tell the instance which service account to use as explained [here](https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances), else it will use the default service account. But If you do not wish to create a new service account(bad practice), add the logging permissions onto the default service account. This is done from the IAM & admin section of the [GCP console](https://console.cloud.google.com/iam-admin/iam/). Still, make sure you have admin right to the given project else you will not see this screen:
 
-![screenshot](https://github.com/andela/vof-deployment-scripts/blob/master/docs/screenshots/editing_roles1.png)
+![screenshot](screenshots/editing_roles1.png?raw=true "Editing IAM Roles Console Screen")
 
 
 ### Enabling logging for your application and VM instances
@@ -31,7 +31,7 @@
 
 - 2. Install the logging agents as follows:
 
-![screenshot](https://github.com/andela/vof-deployment-scripts/blob/master/docs/screenshots/logging_installation.png)
+![screenshot](screenshots/logging_installation.png?raw=true "Setting production environment variables")
 
 - whether you are using packer to build your images or just SSH-ing into the VM instances, run the following commands in the VM instance terminal. For packer add it to a bash script and add that script as a `shell provisioner` in the packer script.
 
@@ -55,9 +55,9 @@
 
 - If you are using an image builder like packer, i suggest you write a bash script and include all the above steps from 2 like this:
 
-![screenshot](https://github.com/andela/vof-deployment-scripts/blob/master/docs/screenshots/config1.png)
+![screenshot](screenshots/config1.png?raw=true "Configurations")
 
-![screenshot](https://github.com/andela/vof-deployment-scripts/blob/master/docs/screenshots/config21.png)
+![screenshot](screenshots/config21.png?raw=true "Configurations")
 
 - and include that script in your packer `.json` file under the `shell provisioners`. This script will then run when an instance created from this packer built image is started.
 

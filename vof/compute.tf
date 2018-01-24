@@ -1,15 +1,15 @@
 resource "google_compute_backend_service" "web" {
   name = "${var.env_name}-vof-lb"
   description = "VOF Load Balancer"
-  port_name = "customhttp"
-  protocol = "HTTP"
+  port_name = "customhttps"
+  protocol = "HTTPS"
   enable_cdn = false
 
   backend {
     group = "${google_compute_instance_group_manager.vof-app-server-group-manager.instance_group}"
   }
 
-  health_checks = ["${google_compute_http_health_check.vof-app-healthcheck.self_link}"]
+  health_checks = ["${google_compute_https_health_check.vof-app-healthcheck.self_link}"]
 }
 
 resource "google_compute_instance_group_manager" "vof-app-server-group-manager" {
@@ -21,7 +21,7 @@ resource "google_compute_instance_group_manager" "vof-app-server-group-manager" 
   target_pools = ["${google_compute_target_pool.default.self_link}"]
 
   named_port {
-    name = "customhttp"
+    name = "customhttps"
     port = 8080
   }
 }
@@ -93,7 +93,7 @@ resource "google_compute_autoscaler" "vof-app-autoscaler" {
   }
 }
 
-resource "google_compute_http_health_check" "vof-app-healthcheck"{
+resource "google_compute_https_health_check" "vof-app-healthcheck"{
   name = "${var.env_name}-vof-app-healthcheck"
   port = 8080
   request_path = "${var.request_path}"

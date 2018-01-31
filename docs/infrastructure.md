@@ -80,7 +80,6 @@ From this point onwards the documentation aims to guide any DevOps engineers tha
     -  creates and manages networks using the *google_compute_network* resource. These created networks are the ones we use in our cloud infrastructure.
     -  creates and manages subnetworks using the *google_compute_subnetwork* resource. 
     - outputs/displays the private subnetwork name and network name to the console.
-    - creates a target pool using the *google_compute_target_pool* resource. The target pool achieves stickiness by ensuring all connections from a client will end up on the same instance as long as they use the same protocol and the instance stays healthy.
         
 ### routing.tf
 - This script defines the:

@@ -11,9 +11,13 @@ get_var() {
 }
 
 export PORT="${PORT:-8080}"
+export SSL_CONFIG_PATH="ssl://0.0.0.0:8080?key=/home/vof/andela_key.key&cert=/home/vof/andela_certificate.crt"
 export RAILS_ENV="$(get_var "railsEnv")"
+export BUCKET_NAME=$(get_var "bucketName")
 sudo echo "export SLACK_WEBHOOK=$(get_var "slackWebhook")" >> /home/vof/.env_setup_rc
 sudo echo "export SLACK_CHANNEL=$(get_var "slackChannel")" >> /home/vof/.env_setup_rc
+gsutil cp gs://${BUCKET_NAME}/ssl/andela_key.key /home/vof/andela_key.key
+gsutil cp gs://${BUCKET_NAME}/ssl/andela_certificate.crt /home/vof/andela_certificate.crt
 
 update_application_yml() {
   cat <<EOF >> /home/vof/app/config/application.yml
@@ -47,7 +51,7 @@ create_log_files() {
 create_vof_supervisord_conf() {
   sudo cat <<EOF > /etc/supervisor/conf.d/vof.conf
 [program:vof]
-command=/usr/bin/env RAILS_ENV=${RAILS_ENV} PORT=${PORT} RAILS_SERVE_STATIC_FILES=true /usr/bin/nohup /usr/local/bin/bundle exec puma -C config/puma.rb
+command=/usr/bin/env RAILS_ENV=${RAILS_ENV} PORT=${PORT} RAILS_SERVE_STATIC_FILES=true /usr/bin/nohup /usr/local/bin/bundle exec puma -b ${SSL_CONFIG_PATH} -C config/puma.rb
 directory=/home/vof/app
 autostart=true
 autorestart=true
@@ -66,7 +70,6 @@ authenticate_service_account() {
 
 get_database_dump_file() {
   if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" ]]; then
-    export BUCKET_NAME=$(get_var "bucketName")
     if gsutil cp gs://${BUCKET_NAME}/database-backups/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
       echo "Database dump file created succesfully"
     fi

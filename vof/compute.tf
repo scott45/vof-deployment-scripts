@@ -8,6 +8,8 @@ resource "google_compute_backend_service" "web" {
   backend {
     group = "${google_compute_instance_group_manager.vof-app-server-group-manager.instance_group}"
   }
+  session_affinity = "GENERATED_COOKIE"
+  timeout_sec = 0
 
   health_checks = ["${google_compute_http_health_check.vof-app-healthcheck.self_link}"]
 }

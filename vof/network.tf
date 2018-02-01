@@ -8,8 +8,3 @@ resource "google_compute_subnetwork" "vof-private-subnetwork" {
   network = "${google_compute_network.vof-network.self_link}"
   ip_cidr_range = "${var.ip_cidr_range}"
 }
-
-resource "google_compute_target_pool" "default" {
-  name = "target-pool"
-  session_affinity = "CLIENT_IP_PROTO"
-}

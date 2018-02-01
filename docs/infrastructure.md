@@ -55,7 +55,7 @@ From this point onwards the documentation aims to guide any DevOps engineers tha
 
 ### compute.tf
 - This scripts defines:
-    - the backend service using the *google_compute_backend_service* terraform resource. This is the VPC load balancer that handles traffic from external sources, i.e, the world.
+    - the backend service using the *google_compute_backend_service* terraform resource. This is the VPC load balancer that handles traffic from external sources, i.e, the world. The backend service has been set to use session cookies to achieve session affinity. Ideally this reconfigures the round robin algorithm of the load balancer, where one client's session will transmit data to only one instance during his/her session. This implementation was necessitated by the csrf architecture of the vof application. To prevent loss of affinity, it is necessary that it's mitigated by ensuring that the minimum number of instances provisioned by autoscaling is enough to handle expected load, then only using autoscaling for unexpected increases in load.
     - the instance group manager using the *google_compute_instance_group_manager* terraform resource. This is resource that creates and manages a pool of instances we have running at any given time in the cloud.
     - the instance template using the *google_compute_instance_template* terraform resource. Just as the name suggests, it is a template from which a new instance is created, on demand. It is made use of by the *google_compute_instance_group_manager*.
     - the autoscaler using the google_compute_autoscaler terraform resource. Just as the name suggests, it automatically adds or removes virtual machines from a managed instance group based on increases or decreases in load. This allows applications to gracefully handle increases in traffic and reduces cost when the need for resources is lower. All you do is just to define the autoscaling policy and the autoscaler performs automatic scaling based on the measured load.
@@ -80,7 +80,6 @@ From this point onwards the documentation aims to guide any DevOps engineers tha
     -  creates and manages networks using the *google_compute_network* resource. These created networks are the ones we use in our cloud infrastructure.
     -  creates and manages subnetworks using the *google_compute_subnetwork* resource. 
     - outputs/displays the private subnetwork name and network name to the console.
-    - creates a target pool using the *google_compute_target_pool* resource. The target pool achieves stickiness by ensuring all connections from a client will end up on the same instance as long as they use the same protocol and the instance stays healthy.
         
 ### routing.tf
 - This script defines the:

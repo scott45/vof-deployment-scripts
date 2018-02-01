@@ -8,6 +8,8 @@ resource "google_compute_backend_service" "web" {
   backend {
     group = "${google_compute_instance_group_manager.vof-app-server-group-manager.instance_group}"
   }
+  session_affinity = "GENERATED_COOKIE"
+  timeout_sec = 0
 
   health_checks = ["${google_compute_https_health_check.vof-app-healthcheck.self_link}"]
 }
@@ -18,7 +20,6 @@ resource "google_compute_instance_group_manager" "vof-app-server-group-manager" 
   instance_template = "${google_compute_instance_template.vof-app-server-template.self_link}"
   zone = "${var.zone}"
   update_strategy = "NONE"
-  target_pools = ["${google_compute_target_pool.default.self_link}"]
 
   named_port {
     name = "customhttps"

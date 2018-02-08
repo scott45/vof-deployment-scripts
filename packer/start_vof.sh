@@ -17,7 +17,6 @@ export RAILS_ENV="$(get_var "railsEnv")"
 export DEPLOY_ENV="$(get_var "railsEnv")"
 if [[ "$(get_var "railsEnv")" == "design-v2" ]]; then
  export DEPLOY_ENV="staging"
- printenv RAILS_ENV
 fi
 
 export BUCKET_NAME=$(get_var "bucketName")

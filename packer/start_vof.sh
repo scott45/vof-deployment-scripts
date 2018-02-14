@@ -43,6 +43,8 @@ production:
   secret_key_base: "$(openssl rand -hex 64)"
 staging:
   secret_key_base: "$(openssl rand -hex 64)"
+design-v2:
+  secret_key_base: "$(openssl rand -hex 64)"
 development:
   secret_key_base: "$(openssl rand -hex 64)"
 sandbox:
@@ -166,6 +168,17 @@ EOF
 </source>
 EOF
 
+  sudo cat <<EOF > /etc/google-fluentd/config.d/vof_design-v2_logs.conf
+<source>
+  @type tail
+  format none
+  path /home/vof/app/log/design-v2.log
+  pos_file /var/lib/google-fluentd/pos/vof.pos
+  read_from_head true
+  tag vof_design-v2_logs
+</source>
+EOF
+
 }
 
 # This configures the file responsible for tracking the last read position of the logs
@@ -174,6 +187,7 @@ configure_log_reader_positioning(){
   sudo cat <<EOF > /var/lib/google-fluentd/pos/vof.pos
 /home/vof/app/log/production.log   000000000000000  000000000000000
 /home/vof/app/log/staging.log   000000000000000  000000000000000
+/home/vof/app/log/design-v2.log   000000000000000  000000000000000
 /home/vof/app/log/production_test.log  000000000000000  000000000000000
 /home/vof/app/log/development.log  000000000000000  000000000000000
 /home/vof/app/log/sandbox.log  000000000000000  000000000000000

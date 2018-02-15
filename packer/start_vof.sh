@@ -79,7 +79,7 @@ authenticate_service_account() {
 }
 
 get_database_dump_file() {
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" || "$RAILS_ENV" == "design-v2" ]]; then
     if gsutil cp gs://${BUCKET_NAME}/database-backups/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
       echo "Database dump file created succesfully"
     fi
@@ -91,7 +91,7 @@ start_app() {
 
   sudo -u vof bash -c "mkdir -p /home/vof/app/log"
 
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" || "$RAILS_ENV" == "design-v2" ]]; then
     # One time actions
     # Check if the database was already imported
     if export PGPASSWORD=$(get_var "databasePassword"); psql -h $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") -c 'SELECT key FROM ar_internal_metadata' 2>/dev/null | grep environment >/dev/null; then

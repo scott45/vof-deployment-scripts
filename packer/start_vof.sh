@@ -45,6 +45,8 @@ staging:
   secret_key_base: "$(openssl rand -hex 64)"
 development:
   secret_key_base: "$(openssl rand -hex 64)"
+sandbox:
+  secret_key_base: "$(openssl rand -hex 64)"
 EOF
 }
 
@@ -75,7 +77,7 @@ authenticate_service_account() {
 }
 
 get_database_dump_file() {
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
     if gsutil cp gs://${BUCKET_NAME}/database-backups/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
       echo "Database dump file created succesfully"
     fi
@@ -87,7 +89,7 @@ start_app() {
 
   sudo -u vof bash -c "mkdir -p /home/vof/app/log"
 
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
     # One time actions
     # Check if the database was already imported
     if export PGPASSWORD=$(get_var "databasePassword"); psql -h $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") -c 'SELECT key FROM ar_internal_metadata' 2>/dev/null | grep environment >/dev/null; then
@@ -117,6 +119,17 @@ configure_google_fluentd_logging() {
   pos_file /var/lib/google-fluentd/pos/vof.pos
   read_from_head true
   tag vof_development_logs
+</source>
+EOF
+
+  sudo cat <<EOF > /etc/google-fluentd/config.d/vof_sandbox_logs.conf
+<source>
+  @type tail
+  format none
+  path /home/vof/app/log/sandbox.log
+  pos_file /var/lib/google-fluentd/pos/vof.pos
+  read_from_head true
+  tag vof_sandbox_logs
 </source>
 EOF
 
@@ -163,6 +176,7 @@ configure_log_reader_positioning(){
 /home/vof/app/log/staging.log   000000000000000  000000000000000
 /home/vof/app/log/production_test.log  000000000000000  000000000000000
 /home/vof/app/log/development.log  000000000000000  000000000000000
+/home/vof/app/log/sandbox.log  000000000000000  000000000000000
 EOF
 }
 
@@ -179,6 +193,7 @@ include /etc/logrotate.d
 /var/log/vof/vof.out.log
 /var/log/vof/vof.err.log
 /home/vof/app/log/staging.log
+/home/vof/app/log/sandbox.log
 /home/vof/app/log/production.log
 {
     weekly

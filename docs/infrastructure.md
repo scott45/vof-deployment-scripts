@@ -34,6 +34,7 @@ Below are the required environments variables that should be set for the pipelin
 12. **STAGING_RESERVED_IP**: GCP VOF project's staging environment reserved global static IP.
 13. **VOF_INFRASTRUCTURE_REPO**: Github link to the VOF infrastructure codebase.
 14. **DESIGN_V2_RESERVED_IP**: GCP VOF project's design-v2 environment reserved global static IP.
+15. **SANDBOX_RESERVED_IP**: GCP VOF project's sandbox environment reserved global static IP.
 
 #### Setting production and staging run-time environment variables in CircleCI
 ![production_envs](screenshots/production_envs.png?raw=true "Setting production environment variables")

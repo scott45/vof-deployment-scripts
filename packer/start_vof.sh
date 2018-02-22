@@ -43,6 +43,8 @@ production:
   secret_key_base: "$(openssl rand -hex 64)"
 staging:
   secret_key_base: "$(openssl rand -hex 64)"
+design-v2:
+  secret_key_base: "$(openssl rand -hex 64)"
 development:
   secret_key_base: "$(openssl rand -hex 64)"
 sandbox:
@@ -77,7 +79,7 @@ authenticate_service_account() {
 }
 
 get_database_dump_file() {
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" || "$RAILS_ENV" == "design-v2" ]]; then
     if gsutil cp gs://${BUCKET_NAME}/database-backups/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
       echo "Database dump file created succesfully"
     fi
@@ -89,7 +91,7 @@ start_app() {
 
   sudo -u vof bash -c "mkdir -p /home/vof/app/log"
 
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" || "$RAILS_ENV" == "design-v2" ]]; then
     # One time actions
     # Check if the database was already imported
     if export PGPASSWORD=$(get_var "databasePassword"); psql -h $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") -c 'SELECT key FROM ar_internal_metadata' 2>/dev/null | grep environment >/dev/null; then
@@ -166,6 +168,17 @@ EOF
 </source>
 EOF
 
+  sudo cat <<EOF > /etc/google-fluentd/config.d/vof_design-v2_logs.conf
+<source>
+  @type tail
+  format none
+  path /home/vof/app/log/design-v2.log
+  pos_file /var/lib/google-fluentd/pos/vof.pos
+  read_from_head true
+  tag vof_design-v2_logs
+</source>
+EOF
+
 }
 
 # This configures the file responsible for tracking the last read position of the logs
@@ -174,6 +187,7 @@ configure_log_reader_positioning(){
   sudo cat <<EOF > /var/lib/google-fluentd/pos/vof.pos
 /home/vof/app/log/production.log   000000000000000  000000000000000
 /home/vof/app/log/staging.log   000000000000000  000000000000000
+/home/vof/app/log/design-v2.log   000000000000000  000000000000000
 /home/vof/app/log/production_test.log  000000000000000  000000000000000
 /home/vof/app/log/development.log  000000000000000  000000000000000
 /home/vof/app/log/sandbox.log  000000000000000  000000000000000

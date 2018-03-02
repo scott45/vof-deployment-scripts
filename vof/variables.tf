@@ -150,3 +150,15 @@ variable "slack_webhook_url" {
 variable "slack_channel" {
   type = "string"
 }
+
+variable "cable_url" {
+  type = "string"
+ }
+
+variable "env_url" {
+  type = "string"
+ }
+
+variable "redis_ip" {
+  type = "string"
+}

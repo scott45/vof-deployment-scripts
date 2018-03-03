@@ -155,10 +155,6 @@ variable "cable_url" {
   type = "string"
  }
 
-variable "env_url" {
-  type = "string"
- }
-
 variable "redis_ip" {
   type = "string"
 }

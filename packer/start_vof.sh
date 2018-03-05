@@ -13,7 +13,7 @@ get_var() {
 export PORT="${PORT:-8080}"
 export SSL_CONFIG_PATH="ssl://0.0.0.0:8080?key=/home/vof/andela_key.key&cert=/home/vof/andela_certificate.crt"
 export RAILS_ENV="$(get_var "railsEnv")"
-
+export REDIS_IP=$(get_var "redisIp")
 export DEPLOY_ENV="$(get_var "railsEnv")"
 if [[ "$(get_var "railsEnv")" == "design-v2" ]]; then
  export DEPLOY_ENV="staging"
@@ -27,6 +27,8 @@ gsutil cp gs://${BUCKET_NAME}/ssl/andela_certificate.crt /home/vof/andela_certif
 
 update_application_yml() {
   cat <<EOF >> /home/vof/app/config/application.yml
+ACTION_CABLE_URL: '$(get_var "cableURL")'
+REDIS_URL: 'redis://${REDIS_IP}'
 API_URL: 'https://api-staging.andela.com/'
 LOGIN_URL: 'https://api-staging.andela.com/login?redirect_url='
 LOGOUT_URL: 'https://api-staging.andela.com/logout?redirect_url='
@@ -42,8 +44,6 @@ create_secrets_yml() {
 production:
   secret_key_base: "$(openssl rand -hex 64)"
 staging:
-  secret_key_base: "$(openssl rand -hex 64)"
-design-v2:
   secret_key_base: "$(openssl rand -hex 64)"
 development:
   secret_key_base: "$(openssl rand -hex 64)"
@@ -71,7 +71,6 @@ stdout_logfile=/var/log/vof/vof.out.log
 user=vof
 EOF
 }
-
 authenticate_service_account() {
   if gcloud auth activate-service-account --key-file=/home/vof/account.json; then
     echo "Service account authentication successful"
@@ -79,7 +78,7 @@ authenticate_service_account() {
 }
 
 get_database_dump_file() {
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" || "$RAILS_ENV" == "design-v2" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
     if gsutil cp gs://${BUCKET_NAME}/database-backups/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
       echo "Database dump file created succesfully"
     fi
@@ -91,7 +90,7 @@ start_app() {
 
   sudo -u vof bash -c "mkdir -p /home/vof/app/log"
 
-  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" || "$RAILS_ENV" == "design-v2" ]]; then
+  if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
     # One time actions
     # Check if the database was already imported
     if export PGPASSWORD=$(get_var "databasePassword"); psql -h $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") -c 'SELECT key FROM ar_internal_metadata' 2>/dev/null | grep environment >/dev/null; then
@@ -104,7 +103,6 @@ start_app() {
     sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:setup"
     sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:seed"
   fi
-
   supervisorctl update && supervisorctl reload
 }
 
@@ -144,7 +142,7 @@ EOF
   read_from_head true
   tag vof_production_logs
 </source>
-EOF 
+EOF
 
   sudo cat <<EOF > /etc/google-fluentd/config.d/vof_production_test_logs.conf
 <source>
@@ -168,17 +166,6 @@ EOF
 </source>
 EOF
 
-  sudo cat <<EOF > /etc/google-fluentd/config.d/vof_design-v2_logs.conf
-<source>
-  @type tail
-  format none
-  path /home/vof/app/log/design-v2.log
-  pos_file /var/lib/google-fluentd/pos/vof.pos
-  read_from_head true
-  tag vof_design-v2_logs
-</source>
-EOF
-
 }
 
 # This configures the file responsible for tracking the last read position of the logs
@@ -187,7 +174,6 @@ configure_log_reader_positioning(){
   sudo cat <<EOF > /var/lib/google-fluentd/pos/vof.pos
 /home/vof/app/log/production.log   000000000000000  000000000000000
 /home/vof/app/log/staging.log   000000000000000  000000000000000
-/home/vof/app/log/design-v2.log   000000000000000  000000000000000
 /home/vof/app/log/production_test.log  000000000000000  000000000000000
 /home/vof/app/log/development.log  000000000000000  000000000000000
 /home/vof/app/log/sandbox.log  000000000000000  000000000000000
@@ -244,7 +230,7 @@ EOF
 
 }
 
-# Reason: When the logs are successfully rotated, the newly setup log files can't be written by the current rails app 
+# Reason: When the logs are successfully rotated, the newly setup log files can't be written by the current rails app
 # instance so supervisord is reload through this cron so that the app starts writing the log to the new log file.
 create_supervisord_cronjob() {
   cat > supervisord_cron <<'EOF'

@@ -50,11 +50,13 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   }
 
   metadata {
+    cableURL = "${var.cable_url}"
     databaseUser = "${random_id.vof-db-user.b64}"
     databasePassword = "${random_id.vof-db-user-password.b64}"
     databaseHost = "${google_sql_database_instance.vof-database-instance.ip_address.0.ip_address}"
     databasePort = "5432"
     databaseName = "${var.env_name}-vof-database"
+    redisIp = "${var.redis_ip}"
     railsEnv = "${var.env_name}"
     bucketName = "${var.bucket}"
     slackChannel = "${var.slack_channel}"
@@ -69,13 +71,13 @@ resource "google_compute_instance_template" "vof-app-server-template" {
 
   # the email is the service account email whose service keys have all the roles suffiecient enough
   # for the project to interract with all the APIs it does interract with.
-  # the scopes are those that we need for logging and monitoring, they are a must for logging to 
-  # be carried out. 
+  # the scopes are those that we need for logging and monitoring, they are a must for logging to
+  # be carried out.
   # the whole service account argument is required for identity and authentication reasons, if it is
   # not included here, the default service account is used instead.
   service_account {
     email = "${var.service_account_email}"
-    scopes = ["https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/cloud-platform", 
+    scopes = ["https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/cloud-platform",
     "https://www.googleapis.com/auth/logging.read", "https://www.googleapis.com/auth/logging.write"]
   }
 }

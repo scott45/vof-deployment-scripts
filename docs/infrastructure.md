@@ -23,19 +23,20 @@ Below are the required environments variables that should be set for the pipelin
 1. **GCLOUD_VOF_BUCKET**: Google Cloud Storage(GCS) bucket where the terraform infrastructure file will be stored.
 2. **GCLOUD_VOF_PROJECT**: Google Cloud Platform(GCP) project ID.
 3. **PRODUCTION_DB_TIER**: Machine type that the database should be setup with. This value can be adjusted if in the future it is determined that the current machine in insufficient or is too big for its tasks.
-4. **PRODUCTION_ENVS**: Setting the environment variables to be added to the production app's `application.yml` file.   
-5. **PRODUCTION_MAX_INSTANCES**: Maximum number of Virtual Machines(VM) that the production environment can scale to in case of high traffic to the site.   
-6. **PRODUCTION_RESERVED_IP**: GCP VOF project's production environment reserved global static IP.  
-7. **SERVICE_ACCOUNT**: Service account with a privileged IAM role that allows the deployment script to setup the network on the GCP project.   
+4. **PRODUCTION_ENVS**: Setting the environment variables to be added to the production app's `application.yml` file.
+5. **PRODUCTION_MAX_INSTANCES**: Maximum number of Virtual Machines(VM) that the production environment can scale to in case of high traffic to the site.
+6. **PRODUCTION_RESERVED_IP**: GCP VOF project's production environment reserved global static IP.
+7. **SERVICE_ACCOUNT**: Service account with a privileged IAM role that allows the deployment script to setup the network on the GCP project.
 8. **SERVICE_ACCOUNT_EMAIL**: Email address that comes with the service account.
 9. **SLACK_CHANNEL**: Slack channel where to send success or failure messages from the pipeline.
-10. **SLACK_CHANNEL_HOOK**: Webhook that will allow the pipeline to sent messages to the slack channel above.   
+10. **SLACK_CHANNEL_HOOK**: Webhook that will allow the pipeline to sent messages to the slack channel above.
 11. **STAGING_ENVS**: Setting the environment variables to be added to the staging app's `application.yml` file.
 12. **STAGING_RESERVED_IP**: GCP VOF project's staging environment reserved global static IP.
 13. **VOF_INFRASTRUCTURE_REPO**: Github link to the VOF infrastructure codebase.
 14. **DESIGN_V2_RESERVED_IP**: GCP VOF project's design-v2 environment reserved global static IP.
 15. **SANDBOX_RESERVED_IP**: GCP VOF project's sandbox environment reserved global static IP.
-
+16. **CABLE_URL**: The cable url of the project. example wss://<the-vof-domain-name>/cable
+17. **REDIS_IP**: The GCP redis ip address of the redis instance.
 #### Setting production and staging run-time environment variables in CircleCI
 ![production_envs](screenshots/production_envs.png?raw=true "Setting production environment variables")
 
@@ -67,42 +68,42 @@ From this point onwards the documentation aims to guide any DevOps engineers tha
 - This script does the following:
     - Generates a random number. The resource random_id generates random numbers that are intended to be used as unique identifiers for other resources. In our case we generate 2 random numbers, one of 8 byte length, and another for a 16 byte length, to be used for database name and password respectively.
     - Creates an SQL database instance using the specified arguments as seen on the terraform google_sql_database_instance page  This is the machine instance on which our postgres database will reside.
-    - Creates a new Google SQL Database on a Google SQL Database Instance.  
-    - Creates a new Google SQL database user and assigns the above randomly created name and password to it.    
+    - Creates a new Google SQL Database on a Google SQL Database Instance.
+    - Creates a new Google SQL database user and assigns the above randomly created name and password to it.
     - And then outputs the username, password and database IP address to the admin on the console in which the scripts are run since these are randomly generated.
 
 ### main.tf
 - This script does the following:
-    - Defines the provider we are using in all the scripts, in this case, “Google”. The Google Cloud provider is used to interact with Google Cloud services. The provider needs to be configured with the proper credentials before it can be used. The credentials here are the service account keys. 
+    - Defines the provider we are using in all the scripts, in this case, “Google”. The Google Cloud provider is used to interact with Google Cloud services. The provider needs to be configured with the proper credentials before it can be used. The credentials here are the service account keys.
     - A terraform backend service. This stores the terraform state from our local storage to a given bucket on Google Cloud Storage.
     - And a data resource which retrieves the terraform state meta data from the remote storage where it was previously stored by the terraform backend resource. This is retrieved every time you run terraform plan, terraform apply or terraform destroy commands.
- 
+
 ### network.tf
 - This script does the following:
     -  creates and manages networks using the *google_compute_network* resource. These created networks are the ones we use in our cloud infrastructure.
-    -  creates and manages subnetworks using the *google_compute_subnetwork* resource. 
+    -  creates and manages subnetworks using the *google_compute_subnetwork* resource.
     - outputs/displays the private subnetwork name and network name to the console.
-        
+
 ### routing.tf
 - This script defines the:
     - creates a static IP address resource global to a Google Compute Engine project, in our case, it is  “*vof-environment-test*”. This is done using the *google_compute_global_address* resource.
-    - global forwarding rule using the *google_compute_global_forwarding_rule*  resource. The global forwarding rule provides a single global IPv4 or IPv6 address that you can use in DNS records for your site.  
-    - http proxy using the *google_compute_target_http_proxy* resource. This resource creates a target HTTP proxy resource in GCE. Target proxies are referenced by one or more global forwarding rules. In the case of HTTP(S) load balancing, proxies route incoming requests to a URL map.  
+    - global forwarding rule using the *google_compute_global_forwarding_rule*  resource. The global forwarding rule provides a single global IPv4 or IPv6 address that you can use in DNS records for your site.
+    - http proxy using the *google_compute_target_http_proxy* resource. This resource creates a target HTTP proxy resource in GCE. Target proxies are referenced by one or more global forwarding rules. In the case of HTTP(S) load balancing, proxies route incoming requests to a URL map.
     - cloud url map using *google_compute_url_map* resource. Compute Engine HTTP(S) Load Balancing allows you to direct traffic to different instances based on the incoming URL. When a request comes into the load balancer, it is routed to backend services based on configurations in a URL map. Using host values (*andela.com*) and path values (*/path*) in the destination URL, the URL map forwards the request to the correct backend service.
-    - firewalls, both internal and external and their rules. Google Cloud Platform (GCP) firewall rules protect your virtual machine (VM) instances from unapproved connections, both inbound (ingress) and outbound (egress). You can create firewall rules to allow or deny specific connections based on a combination of IP addresses, ports, and protocol. 
+    - firewalls, both internal and external and their rules. Google Cloud Platform (GCP) firewall rules protect your virtual machine (VM) instances from unapproved connections, both inbound (ingress) and outbound (egress). You can create firewall rules to allow or deny specific connections based on a combination of IP addresses, ports, and protocol.
     - and another firewall to let through healthcheck traffic.
 
 ### jumpbox.tf
-- This script sets a VM that is capable of accessing, via SSH, the VMs in a particular environment. A staging environment jumpbox will only be able to access the VMs setup in the internal network of the staging environment and the same applies to the production jumpbox. 
-- This file is self contained and defines all the attributes that accrue to a jumpbox such as the GCE instance, the networking settings and the necessary firewall rules it needs to do its work. 
-    
+- This script sets a VM that is capable of accessing, via SSH, the VMs in a particular environment. A staging environment jumpbox will only be able to access the VMs setup in the internal network of the staging environment and the same applies to the production jumpbox.
+- This file is self contained and defines all the attributes that accrue to a jumpbox such as the GCE instance, the networking settings and the necessary firewall rules it needs to do its work.
+
 ### variables.tf
 - This script declares and/or defines the terraform scripts’ variables. These variables are replacements in all the terraform scripts areas where we put a syntax that looks like *${some resource name here},* in technical terms, wherever we interpolated.
 Additionally we created another folder called packer which contains a *.json* file that contains a packer script that is responsible for creating the image we shall use to create all instances for our application in the cloud. To create a packer image do the following;
  - In your terminal, “cd” into the packer folder, set the environment variable **VOF_PATH** to the path to the application’s local repository folder.
  - Run the command *“packer build packer.json*” to start the image creation process.
- - At the successful completion of the packer building process, an image will be created including all contents described in the **packer.json** script. For our case, that includes all the bash scripts such as the **“setup.sh”** and the **“start_vof.sh”**. 
+ - At the successful completion of the packer building process, an image will be created including all contents described in the **packer.json** script. For our case, that includes all the bash scripts such as the **“setup.sh”** and the **“start_vof.sh”**.
  - The **setup.sh** script sets up our VOF application code, creates necessary folders to store the code in the image, install all required dependencies for both the native OS of the server we are using, as well as the VOF application language dependencies.
  - Additionally a **.json** file that contains google service account keys.
- 
+
 _**PS: All this assumes that terraform and packer are installed on your local machine.**_

@@ -100,14 +100,15 @@ start_app() {
     # One time actions
     # Check if the database was already imported
     if export PGPASSWORD=$(get_var "databasePassword"); psql -h $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") -c 'SELECT key FROM ar_internal_metadata' 2>/dev/null | grep environment >/dev/null; then
-      sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:migrate"
+      sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} rails db:migrate"
+      sudo -u vof bash -c "cd ${app_root} rails db:seed"
     else
       # Import database dump.
       sudo -u postgres bash -c "export PGPASSWORD=$(get_var "databasePassword"); psql -h  $(get_var "databaseHost") -p 5432 -U $(get_var "databaseUser") -d $(get_var "databaseName") < /home/vof/vof_${RAILS_ENV}.sql"
     fi
   else
-    sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:setup"
-    sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} bundle exec rake db:seed"
+    sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} rails db:setup"
+    sudo -u vof bash -c "cd ${app_root} && env RAILS_ENV=${RAILS_ENV} rails db:seed"
   fi
   supervisorctl update && supervisorctl reload
 }

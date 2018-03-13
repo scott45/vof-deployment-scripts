@@ -20,13 +20,15 @@ Note: make sure you are running all these commands while you are in the director
 
 Run the command below to have a glimpse of what the terraform scripts will create when you run the above command.
 
-`terraform plan -var=state_path=<path/to/state/staging/terraform.tfstate> -var=project_id=<gcp-project-id> -var=bucket=<gcs-bucket-name> -var=env_name=<staging | production> -var=vof_disk_image=<packer-generated-image> -var=reserved_env_ip=<gcp-reserved-environment-ip> -var=service_account_email=<service-account-email-with-logging-capabilities> -var=slack_channel=<slack-channel> -var=slack_webhook_url=<slack-channel-hook> var=cable_url=<cable-url>  -var=redis_ip=<redis-ip-address>`
+`terraform plan -var=state_path=<path/to/state/staging/terraform.tfstate> -var=project_id=<gcp-project-id> -var=bucket=<gcs-bucket-name> -var=env_name=<staging | production> -var=vof_disk_image=<packer-generated-image> -var=reserved_env_ip=<gcp-reserved-environment-ip> -var=service_account_email=<service-account-email-with-logging-capabilities> -var=slack_channel=<slack-channel> -var=slack_webhook_url=<slack-channel-hook> var=cable_url=<cable-url>  -var=redis_ip=<redis-ip-address> -var=bugsnag_key=<bugsnap_api_key>`
+`
 
 ### Step 2:
 
 Run the command below to create all the resources that have been defined in the terraform scripts.
 
-`terraform apply -var=state_path=<path/to/state/staging/terraform.tfstate> -var=project_id=<gcp-project-id> -var=bucket=<gcs-bucket-name> -var=env_name=<staging | production> -var=vof_disk_image=<packer-generated-image> -var=reserved_env_ip=<gcp-reserved-environment-ip> -var=service_account_email=<service-account-email-with-logging-capabilities> -var=slack_channel=<slack-channel> -var=slack_webhook_url=<slack-channel-hook> var=cable_url=<cable-url> -var=env_url=<env-url> -var=redis_ip=<redis-ip-address>`
+`terraform apply -var=state_path=<path/to/state/staging/terraform.tfstate> -var=project_id=<gcp-project-id> -var=bucket=<gcs-bucket-name> -var=env_name=<staging | production> -var=vof_disk_image=<packer-generated-image> -var=reserved_env_ip=<gcp-reserved-environment-ip> -var=service_account_email=<service-account-email-with-logging-capabilities> -var=slack_channel=<slack-channel> -var=slack_webhook_url=<slack-channel-hook> var=cable_url=<cable-url> -var=env_url=<env-url> -var=redis_ip=<redis-ip-address> -var=bugsnag_key=<bugsnap_api_key>`
+`
 
 
 ### Step 3:
@@ -37,7 +39,7 @@ Head over to the GCP console at **console.cloud.google.com** to check out your n
 
 In the event that you wish to destroy an environment.
 
-`terraform destroy --force -var=state_path=<path/to/state/staging/terraform.tfstate> -var=project_id=<gcp-project-id> -var=bucket=<gcs-bucket-name> -var=env_name=<staging | production> -var=vof_disk_image=<packer-generated-image> -var=reserved_env_ip=<gcp-reserved-environment-ip> -var=service_account_email=<service-account-email-with-logging-capabilities> -var=slack_channel=<slack-channel> -var=slack_webhook_url=<slack-channel-hook> var=cable_url=<cable-url> -var=redis_ip=<redis-ip-address>`
+`terraform destroy --force -var=state_path=<path/to/state/staging/terraform.tfstate> -var=project_id=<gcp-project-id> -var=bucket=<gcs-bucket-name> -var=env_name=<staging | production> -var=vof_disk_image=<packer-generated-image> -var=reserved_env_ip=<gcp-reserved-environment-ip> -var=service_account_email=<service-account-email-with-logging-capabilities> -var=slack_channel=<slack-channel> -var=slack_webhook_url=<slack-channel-hook> -var=cable_url=<cable-url> -var=redis_ip=<redis-ip-address> -var=bugsnag_key=<bugsnap_api_key>`
 
 
 > **Note:**

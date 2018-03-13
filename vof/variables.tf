@@ -158,3 +158,5 @@ variable "cable_url" {
 variable "redis_ip" {
   type = "string"
 }
+
+variable "bugsnag_key" {}

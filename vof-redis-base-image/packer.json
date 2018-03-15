@@ -1,0 +1,29 @@
+{
+	"variables": {
+		"service_account_json": "../shared/account.json",
+		"env_name" : "{{env `RAILS_ENV`}}",
+		"project_id": "{{env `PROJECT_ID`}}"
+	},
+	"builders": [
+		{
+			"type": "googlecompute",
+			"project_id": "{{user `project_id`}}",
+			"machine_type": "g1-small",
+			"source_image": "ubuntu-1604-xenial-v20170815a",
+			"region": "europe-west1",
+			"zone": "europe-west1-b",
+			"ssh_username": "vof",
+			"image_description": "vof image for ruby on rails redis server",
+			"image_family": "ubuntu-1604-lts",
+			"image_name": "vof-redis-server-base-image",
+			"disk_size": 10,
+			"account_file": "{{ user `service_account_json`}}"
+		}
+	],
+	"provisioners": [
+		{
+			"type": "shell",
+			"script": "setup.sh"
+		}
+	]
+}

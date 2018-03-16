@@ -37,6 +37,7 @@ Below are the required environments variables that should be set for the pipelin
 15. **SANDBOX_RESERVED_IP**: GCP VOF project's sandbox environment reserved global static IP.
 16. **CABLE_URL**: The cable url of the project. example wss://<the-vof-domain-name>/cable
 17. **REDIS_IP**: The GCP redis ip address of the redis instance.
+18. **BUGSNUG_KEY**: This is the apikey that is generated once you integrate the application with bugsnag
 #### Setting production and staging run-time environment variables in CircleCI
 ![production_envs](screenshots/production_envs.png?raw=true "Setting production environment variables")
 

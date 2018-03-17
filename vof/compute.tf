@@ -50,7 +50,7 @@ resource "google_compute_instance_template" "vof-app-server-template" {
   }
 
   metadata {
-    bugsnagKey =  "${var.bugsnag_key}
+    bugsnagKey =  "${var.bugsnag_key}"
     cableURL = "${var.cable_url}"
     databaseUser = "${random_id.vof-db-user.b64}"
     databasePassword = "${random_id.vof-db-user-password.b64}"

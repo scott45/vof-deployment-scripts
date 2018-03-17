@@ -87,10 +87,10 @@ get_database_dump_file() {
   fi
 }
 start_bugsnag(){
-  pushd /home/vof/app
-    rails generate bugsnag ${BUGSNAG_KEY}
-  popd
+ local app_root="/home/vof/app"
+sudo -u vof bash -c " cd ${app_root} && rails generate bugsnag ${BUGSNAG_KEY} -f"
 }
+
 start_app() {
   local app_root="/home/vof/app"
 

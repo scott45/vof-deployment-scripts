@@ -160,3 +160,7 @@ variable "redis_ip" {
 }
 
 variable "bugsnag_key" {}
+
+variable "user_microservice_api_url" {}
+
+variable "user_microservice_api_token" {}

@@ -64,6 +64,8 @@ resource "google_compute_instance_template" "vof-app-server-template" {
     slackWebhook = "${var.slack_webhook_url}"
     startup-script = "/home/vof/start_vof.sh"
     serial-port-enable = 1
+    userMicroserviceApiUrl   = "${var.user_microservice_api_url}"
+    userMicroserviceApiToken = "${var.user_microservice_api_token}"
   }
 
   lifecycle {

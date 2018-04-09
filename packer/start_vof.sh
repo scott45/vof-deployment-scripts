@@ -26,14 +26,25 @@ sudo echo "export SLACK_CHANNEL=$(get_var "slackChannel")" >> /home/vof/.env_set
 gsutil cp gs://${BUCKET_NAME}/ssl/andela_key.key /home/vof/andela_key.key
 gsutil cp gs://${BUCKET_NAME}/ssl/andela_certificate.crt /home/vof/andela_certificate.crt
 
+
+export API_URL='https://api-staging.andela.com/'
+export LOGIN_URL='https://api-staging.andela.com/login?redirect_url='
+export LOGOUT_URL='https://api-staging.andela.com/logout?redirect_url='
+
+if [ "$DEPLOY_ENV" == "production" ]; then
+  export API_URL='https://api-prod.andela.com/'
+  export LOGIN_URL='https://api-prod.andela.com/login?redirect_url='
+  export LOGOUT_URL='https://api-prod.andela.com/logout?redirect_url='
+fi
+
 update_application_yml() {
   cat <<EOF >> /home/vof/app/config/application.yml
 ACTION_CABLE_URL: '$(get_var "cableURL")'
 REDIS_URL: 'redis://${REDIS_IP}'
 BUGSNAG_KEY: '$(get_var "bugsnagKey")'
-API_URL: 'https://api-staging.andela.com/'
-LOGIN_URL: 'https://api-staging.andela.com/login?redirect_url='
-LOGOUT_URL: 'https://api-staging.andela.com/logout?redirect_url='
+API_URL: '${API_URL}'
+LOGIN_URL: '${LOGIN_URL}'
+LOGOUT_URL: '${LOGOUT_URL}'
 USER_MICROSERVICE_API_URL: '$(get_var "userMicroserviceApiUrl")'
 USER_MICROSERVICE_API_TOKEN: '$(get_var "userMicroserviceApiToken")'
 POSTGRES_USER: '$(get_var "databaseUser")'

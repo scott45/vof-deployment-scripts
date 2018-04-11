@@ -1,8 +1,3 @@
-resource "google_compute_address" "redis-ip" {
-  name   = "${var.env_name}-redis-ip"
-  region = "${var.region}"
-}
-
 resource "google_compute_instance" "vof-redis-server" {
   name         = "${var.env_name}-vof-redis-server"
   machine_type = "${var.small_machine_type}"
@@ -19,10 +14,7 @@ resource "google_compute_instance" "vof-redis-server" {
   network_interface {
     network = "${google_compute_network.vof-network.self_link}"
 
-    access_config {
-      // Ephemeral IP
-      nat_ip = "${google_compute_address.redis-ip.address}"
-    }
+    access_config {}
   }
 
   service_account {

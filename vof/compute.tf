@@ -54,7 +54,6 @@ resource "google_compute_instance_template" "vof-app-server-template" {
     cableURL = "${var.cable_url}"
     databaseUser = "${random_id.vof-db-user.b64}"
     databasePassword = "${random_id.vof-db-user-password.b64}"
-    databaseInstanceName = "${var.env_name}-vof-database-instance-${replace(lower(random_id.db-name.b64), "_", "-")}"
     databaseHost = "${google_sql_database_instance.vof-database-instance.ip_address.0.ip_address}"
     databasePort = "5432"
     databaseName = "${var.env_name}-vof-database"

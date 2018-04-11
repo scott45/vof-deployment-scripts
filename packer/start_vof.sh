@@ -42,6 +42,7 @@ update_application_yml() {
 ACTION_CABLE_URL: '$(get_var "cableURL")'
 REDIS_URL: 'redis://${REDIS_IP}'
 BUGSNAG_KEY: '$(get_var "bugsnagKey")'
+DB_NAME: '$(get_var "databaseInstanceName")'
 API_URL: '${API_URL}'
 LOGIN_URL: '${LOGIN_URL}'
 LOGOUT_URL: '${LOGOUT_URL}'
@@ -90,6 +91,11 @@ authenticate_service_account() {
   if gcloud auth activate-service-account --key-file=/home/vof/account.json; then
     echo "Service account authentication successful"
   fi
+}
+
+authorize_database_access_networks() {
+CURRENTIPS="$(gcloud compute instances list --project vof-tracker | grep ${RAILS_ENV}-vof-app-instance | awk -v ORS=, '{if ($5) print $5}' | sed 's/,$//')"
+gcloud sql instances patch $(get_var "databaseInstanceName") --quiet --authorized-networks=$CURRENTIPS,41.75.89.154,41.215.245.162,41.215.245.162,108.41.204.165,14.140.245.142,182.74.31.70
 }
 
 get_database_dump_file() {
@@ -271,8 +277,8 @@ main() {
   update_application_yml
   create_secrets_yml
   create_vof_supervisord_conf
-
   authenticate_service_account
+  authorize_database_access_networks
   get_database_dump_file
   start_bugsnag
   start_app

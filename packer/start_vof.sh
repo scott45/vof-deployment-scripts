@@ -98,6 +98,11 @@ CURRENTIPS="$(gcloud compute instances list --project vof-tracker-app | grep ${R
 gcloud sql instances patch $(get_var "databaseInstanceName") --quiet --authorized-networks=$CURRENTIPS,41.75.89.154,41.215.245.162,41.215.245.162,108.41.204.165,14.140.245.142,182.74.31.70
 }
 
+authorize_redis_access_ips() {
+  CURRENTIPS="$(gcloud compute instances list --project vof-tracker-app | grep ${RAILS_ENV}-vof-app-instance | awk -v ORS=, '{if ($5) print $5}' | sed 's/,$//')"
+  gcloud compute firewall-rules update vof-${RAILS_ENV}-redis-firewall --source-ranges=${CURRENTIPS}
+}
+
 get_database_dump_file() {
   if [[ "$RAILS_ENV" == "production" || "$RAILS_ENV" == "staging" || "$RAILS_ENV" == "sandbox" ]]; then
     if gsutil cp gs://${BUCKET_NAME}/database-backups/vof_${RAILS_ENV}.sql /home/vof/vof_${RAILS_ENV}.sql; then
@@ -278,6 +283,7 @@ main() {
   create_secrets_yml
   create_vof_supervisord_conf
   authenticate_service_account
+  authorize_redis_access_ips
   authorize_database_access_networks
   get_database_dump_file
   start_bugsnag

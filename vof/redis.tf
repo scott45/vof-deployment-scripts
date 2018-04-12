@@ -1,3 +1,8 @@
+resource "google_compute_address" "redis-ip" {
+  name   = "${var.env_name}-redis-ip"
+  region = "${var.region}"
+}
+
 resource "google_compute_instance" "vof-redis-server" {
   name         = "${var.env_name}-vof-redis-server"
   machine_type = "${var.small_machine_type}"
@@ -14,7 +19,11 @@ resource "google_compute_instance" "vof-redis-server" {
   network_interface {
     network = "${google_compute_network.vof-network.self_link}"
 
-    access_config {}
+    access_config {
+      // Ephemeral IP
+      nat_ip = "${google_compute_address.redis-ip.address}"
+    }
+
   }
 
   service_account {
@@ -33,9 +42,9 @@ resource "google_compute_firewall" "vof-redis-traffic-firewall" {
 
   allow {
     protocol = "tcp"
-    ports    = ["6379"]
+    ports    = ["1025-65535"]
   }
 
-  source_tags = ["${var.env_name}-vof-app-server"]
+  source_ranges = ["0.0.0.0/0"]
   target_tags   = ["${var.env_name}-redis-server"]
 }

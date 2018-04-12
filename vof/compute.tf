@@ -58,7 +58,7 @@ resource "google_compute_instance_template" "vof-app-server-template" {
     databaseHost = "${google_sql_database_instance.vof-database-instance.ip_address.0.ip_address}"
     databasePort = "5432"
     databaseName = "${var.env_name}-vof-database"
-    redisIp = "${google_compute_address.redis-ip.network_interface.0.address}"
+    redisIp = "${google_compute_address.redis-ip.address}:6379"
     railsEnv = "${var.env_name}"
     bucketName = "${var.bucket}"
     slackChannel = "${var.slack_channel}"

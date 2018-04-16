@@ -94,8 +94,13 @@ authenticate_service_account() {
 }
 
 authorize_database_access_networks() {
-CURRENTIPS="$(gcloud compute instances list --project vof-tracker-app | grep ${RAILS_ENV}-vof-app-instance | awk -v ORS=, '{if ($5) print $5}' | sed 's/,$//')"
-gcloud sql instances patch $(get_var "databaseInstanceName") --quiet --authorized-networks=$CURRENTIPS,41.75.89.154,41.215.245.162,41.215.245.162,108.41.204.165,14.140.245.142,182.74.31.70
+  CURRENTIPS="$(gcloud compute instances list --project vof-tracker-app | grep ${RAILS_ENV}-vof-app-instance | awk -v ORS=, '{if ($5) print $5}' | sed 's/,$//')"
+
+  # ensure replica's authorized networks are also updated
+  for sqlInstanceName in $(gcloud sql instances list --project vof-tracker-app | grep ${RAILS_ENV}-vof-database-instance | awk -v ORS=" " '{if ($1 !~ /production-vof-database-instance-vew0wndaum8/) print $1}'); do
+    gcloud sql instances patch $sqlInstanceName --quiet --authorized-networks=$CURRENTIPS,41.75.89.154,41.215.245.162,41.215.245.162,108.41.204.165,14.140.245.142,182.74.31.70
+  done 
+
 }
 
 authorize_redis_access_ips() {

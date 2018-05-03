@@ -96,9 +96,14 @@ authenticate_service_account() {
 authorize_database_access_networks() {
   CURRENTIPS="$(gcloud compute instances list --project vof-tracker-app | grep ${RAILS_ENV}-vof-app-instance | awk -v ORS=, '{if ($5) print $5}' | sed 's/,$//')"
 
+  # authorize certain IPs to access staging db but not the production db
+  if [ "$RAILS_ENV" != "production" ]; then
+    $CURRENTIPS  = $CURRENTIPS,105.21.72.66,105.21.32.90,105.27.99.66,41.90.97.134,41.75.89.154,169.239.188.10,41.215.245.118
+  fi
+
   # ensure replica's authorized networks are also updated
   for sqlInstanceName in $(gcloud sql instances list --project vof-tracker-app | grep ${RAILS_ENV}-vof-database-instance | awk -v ORS=" " '{if ($1 !~ /production-vof-database-instance-vew0wndaum8/) print $1}'); do
-    gcloud sql instances patch $sqlInstanceName --quiet --authorized-networks=$CURRENTIPS,41.75.89.154,158.106.201.190,41.215.245.162,108.41.204.165,14.140.245.142,182.74.31.70,105.21.72.66,105.21.32.90,105.27.99.66,41.90.97.134,41.75.89.154,169.239.188.10,41.215.245.118
+    gcloud sql instances patch $sqlInstanceName --quiet --authorized-networks=$CURRENTIPS,41.75.89.154,158.106.201.190,41.215.245.162,108.41.204.165,14.140.245.142,182.74.31.70
   done 
 
 }

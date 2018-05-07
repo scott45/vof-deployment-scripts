@@ -288,8 +288,12 @@ main() {
   create_secrets_yml
   create_vof_supervisord_conf
   authenticate_service_account
-  authorize_redis_access_ips
-  authorize_database_access_networks
+  set +o errexit
+  set +o pipefail
+    authorize_redis_access_ips
+    authorize_database_access_networks
+  set -o errexit
+  set -o pipefail
   get_database_dump_file
   start_bugsnag
   start_app

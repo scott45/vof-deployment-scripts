@@ -98,7 +98,7 @@ authorize_database_access_networks() {
 
   # authorize certain IPs to access staging db but not the production db
   if [ "$RAILS_ENV" != "production" ]; then
-    $CURRENTIPS  = $CURRENTIPS,105.21.72.66,105.21.32.90,105.27.99.66,41.90.97.134,41.75.89.154,169.239.188.10,41.215.245.118
+    CURRENTIPS="${CURRENTIPS},105.21.72.66,105.21.32.90,105.27.99.66,41.90.97.134,41.75.89.154,169.239.188.10,41.215.245.118"
   fi
 
   # ensure replica's authorized networks are also updated

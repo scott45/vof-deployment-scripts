@@ -3,6 +3,12 @@
 set -ex
 set -o pipefail
 
+export SCRIPT_FILE="/home/vof/setup-scripts"
+
+# import functions
+. ${SCRIPT_FILE}/setup_filebeat.sh
+. ${SCRIPT_FILE}/setup_metricbeat.sh
+
 get_var() {
   local name="$1"
 
@@ -279,7 +285,6 @@ update_crontab() {
   rm upgrades_cron log_cron supervisord_cron
 }
 
-
 main() {
   echo "startup script invoked at $(date)" >> /tmp/script.log
 
@@ -296,6 +301,13 @@ main() {
   set -o pipefail
   get_database_dump_file
   start_bugsnag
+
+  install_filebeat
+  setup_filebeat
+
+  install_metricbeat
+  setup_metricbeat
+
   start_app
   configure_google_fluentd_logging
   configure_log_reader_positioning

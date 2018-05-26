@@ -38,6 +38,11 @@
 		},
 		{
 			"type": "file",
+			"source": "setup-scripts",
+      "destination": "/home/vof"
+		},
+		{
+			"type": "file",
 			"source": "vault_token.sh",
       "destination": "/home/vof/vault_token.sh"
 		},

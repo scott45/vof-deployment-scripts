@@ -12,7 +12,7 @@ resource "google_compute_instance" "vof-jumpbox" {
   }
 
   network_interface {
-    network = "${google_compute_network.vof-network.name}"
+    subnetwork = "${google_compute_subnetwork.vof-subnetwork.name}"
     access_config {}
   }
 

@@ -76,7 +76,9 @@ resource "google_compute_firewall" "vof-internal-firewall" {
     ports = ["0-65535"]
   }
 
-  source_ranges = ["${var.ip_cidr_range}", 
+  source_ranges = [
+  "${var.env_name == "production" ? var.ip_cidr_range : var.env_name == "staging" ? var.staging_ip_cidr_range : var.env_name == "sandbox" ? var.sandbox_ip_cidr_range : ""}",
+  "${var.env_name == "production" ? var.ip_cidr_range_next : var.env_name == "staging" ? var.staging_ip_cidr_range_next : var.env_name == "sandbox" ? var.sandbox_ip_cidr_range_next : ""}",
   "${google_compute_instance.vof-jumpbox.network_interface.0.access_config.0.assigned_nat_ip}"]
 }
 

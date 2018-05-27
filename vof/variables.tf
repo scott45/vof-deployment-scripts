@@ -99,6 +99,31 @@ variable "ip_cidr_range" {
   default = "10.0.0.0/24"
 }
 
+variable "staging_ip_cidr_range" {
+  type = "string"
+  default = "10.1.0.0/24"
+}
+
+variable "sandbox_ip_cidr_range" {
+  type = "string"
+  default = "10.2.0.0/24"
+}
+
+variable "ip_cidr_range_next" {
+  type = "string"
+  default = "10.0.1.0/24"
+}
+
+variable "staging_ip_cidr_range_next" {
+  type = "string"
+  default = "10.1.1.0/24"
+}
+
+variable "sandbox_ip_cidr_range_next" {
+  type = "string"
+  default = "10.2.1.0/24"
+}
+
 variable "db_username" {
   type = "string"
   default = "daniel"

@@ -17,7 +17,7 @@ resource "google_compute_instance" "vof-redis-server" {
   }
 
   network_interface {
-    network = "${google_compute_network.vof-network.self_link}"
+    subnetwork = "${google_compute_subnetwork.vof-subnetwork.name}"
 
     access_config {
       // Ephemeral IP

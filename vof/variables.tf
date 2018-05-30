@@ -1,10 +1,10 @@
 variable "region" {
-  type = "string"
+  type    = "string"
   default = "europe-west1"
 }
 
 variable "zone" {
-  type = "string"
+  type    = "string"
   default = "europe-west1-b"
 }
 
@@ -13,27 +13,27 @@ variable "reserved_env_ip" {}
 variable "bucket" {}
 
 variable "base_image" {
-  type = "string"
+  type    = "string"
   default = "ubuntu-1604-xenial-v20170815a"
 }
 
 variable "project_id" {
-  type = "string"
+  type    = "string"
   default = "vof-migration-test"
 }
 
 variable "machine_type" {
-  type = "string"
+  type    = "string"
   default = "n1-standard-1"
 }
 
 variable "small_machine_type" {
-  type = "string"
+  type    = "string"
   default = "g1-small"
 }
 
 variable "credential_file" {
-  type = "string"
+  type    = "string"
   default = "../shared/account.json"
 }
 
@@ -46,12 +46,12 @@ variable "state_path" {
 }
 
 variable "max_instances" {
-  type = "string"
+  type    = "string"
   default = "4"
 }
 
 variable "min_instances" {
-  type = "string"
+  type    = "string"
   default = "2"
 }
 
@@ -60,82 +60,82 @@ variable "vof_disk_image" {
 }
 
 variable "vof_disk_type" {
-  type = "string"
+  type    = "string"
   default = "pd-ssd"
 }
 
 variable "vof_disk_size" {
-  type = "string"
+  type    = "string"
   default = "10"
 }
 
 variable "request_path" {
-  type = "string"
+  type    = "string"
   default = "/login"
 }
 
 variable "check_interval_sec" {
-  type = "string"
+  type    = "string"
   default = "2"
 }
 
 variable "unhealthy_threshold" {
-  type = "string"
+  type    = "string"
   default = "2"
 }
 
 variable "healthy_threshold" {
-  type = "string"
+  type    = "string"
   default = "2"
 }
 
 variable "timeout_sec" {
-  type = "string"
+  type    = "string"
   default = "1"
 }
 
 variable "ip_cidr_range" {
-  type = "string"
+  type    = "string"
   default = "10.0.0.0/24"
 }
 
 variable "db_username" {
-  type = "string"
+  type    = "string"
   default = "daniel"
 }
 
 variable "db_replication_type" {
-  type = "string"
+  type    = "string"
   default = "SYNCHRONOUS"
 }
 
 variable "db_backup_start_time" {
-  type = "string"
+  type    = "string"
   default = "00:12"
 }
 
 variable "db_instance_tier" {
-  type = "string"
+  type    = "string"
   default = "db-f1-micro"
 }
 
 variable "db_failover_target" {
-  type = "string"
+  type    = "string"
   default = "true"
 }
 
 variable "db_connect_retry_interval" {
-  type = "string"
+  type    = "string"
   default = "40"
 }
 
 variable "db_master_replica_name" {
-  type = "string"
+  type    = "string"
   default = "vof-replica-master"
 }
 
 variable "db_master_replica_password" {
-  type = "string"
+  type    = "string"
   default = "vof-replica"
 }
 
@@ -153,7 +153,7 @@ variable "slack_channel" {
 
 variable "cable_url" {
   type = "string"
- }
+}
 
 variable "redis_ip" {
   type = "string"
@@ -164,3 +164,7 @@ variable "bugsnag_key" {}
 variable "user_microservice_api_url" {}
 
 variable "user_microservice_api_token" {}
+
+variable "google_storage_access_key_id" {}
+
+variable "google_storage_secret_access_key" {}

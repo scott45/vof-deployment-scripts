@@ -8,12 +8,13 @@ install_filebeat(){
 create_filebeat_config_file(){
 
   sudo mv /etc/filebeat/filebeat.yml /etc/filebeat/filebeat_old.yml
-  sudo bash -c 'cat <<EOF > /etc/filebeat/filebeat.yml
+  sudo bash -c "cat <<EOF > /etc/filebeat/filebeat.yml
 filebeat:
   prospectors:
     -
       paths:
         - /home/vof/app/log/logstash_*.log
+        exclude_lines: ['/health{1}']
       #  - /var/log/*.log
 
       input_type: log
@@ -24,18 +25,18 @@ filebeat:
 
 output:
   logstash:
-    hosts: ["192.168.1.2:5044"]
+    hosts: ['192.168.1.2:5044']
     bulk_max_size: 1024
 
     ssl:
-      certificate_authorities: ["/etc/pki/tls/certs/logstash-forwarder.crt"]
+      certificate_authorities: ['/etc/pki/tls/certs/logstash-forwarder.crt']
 
 shipper:
 
 logging:
   files:
     rotateeverybytes: 10485760 # = 10MB
-EOF'
+EOF"
 
 }
 

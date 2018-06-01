@@ -25,7 +25,7 @@ metricbeat.modules:
     - socket
     - uptime
   enabled: true
-  period: 10s
+  period: 60s
   processes: ['.*']
   cpu_ticks: false
 

@@ -71,7 +71,7 @@ variable "vof_disk_size" {
 
 variable "request_path" {
   type    = "string"
-  default = "/login"
+  default = "/health"
 }
 
 variable "check_interval_sec" {

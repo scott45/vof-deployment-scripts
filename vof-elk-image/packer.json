@@ -1,6 +1,6 @@
 {
 	"variables": {
-		"service_account_json": "../shared/account-andela-learning.json",
+		"service_account_json": "../shared/account.json",
         "project_id": "{{env `PROJECT_ID`}}",
         "bucket_name": "{{env `BUCKET_NAME`}}"
 	},
@@ -16,7 +16,7 @@
 			"image_description": "image used to create an instance configured with elk",
 			"image_family": "ubuntu-1604-lts",
 			"image_name": "vof-elk-base-image",
-			"disk_size": 10,
+			"disk_size": 20,
 			"account_file": "{{ user `service_account_json`}}"
 		}
 	],

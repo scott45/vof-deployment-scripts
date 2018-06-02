@@ -95,22 +95,87 @@ install_nginx(){
     sudo ufw allow 'Nginx Full'
 }
 
-create_elk_supervisord_conf() {
-  sudo bash -c 'cat <<EOF > /etc/supervisor/conf.d/elk.conf
-[program:elk]
-command=sudo systemctl start kibana elasticsearch logstash
-directory=/home/elk/
-autostart=true
-stderr_logfile=/var/log/elk/elk.err.log
-stdout_logfile=/var/log/elk/elk.out.log
-user=elk
-EOF'
-    
-    sudo mkdir -p /var/log/elk
-    sudo touch /var/log/elk/elk.err.log
-    sudo touch /var/log/elk/elk.out.log
-    
-    sudo service supervisor start
+install_elastic_search_curator(){
+    wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+    echo "deb [arch=amd64] https://packages.elastic.co/curator/5/debian stable main" | sudo tee -a /etc/apt/sources.list.d/curator-5.list
+    sudo apt-get update
+    sudo apt-get install elasticsearch-curator -y
+    mkdir -p /home/elk/curator
+}
+
+setup_curator_actions(){
+    sudo bash -c "cat <<EOF > /home/elk/curator/curator_action.yml
+---
+actions:
+  1:
+    action: delete_indices
+    description: >-
+      Delete filebeat indices older than 30 days (based on index name), for filebeat-
+      prefixed indices. Ignore the error if the filter does not result in an
+      actionable list of indices (ignore_empty_list) and exit cleanly.
+    options:
+      timeout_override: 300
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: filebeat-
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 30
+  2:
+    action: delete_indices
+    description: >-
+      Delete metricbeat indices older than 30 days (based on index name), for metricbeat-
+      prefixed indices. Ignore the error if the filter does not result in an
+      actionable list of indices (ignore_empty_list) and exit cleanly.
+    options:
+      timeout_override: 300
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: metricbeat-
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 30
+EOF"
+
+}
+
+setup_curator_config(){
+
+sudo bash -c "cat <<EOF > /home/elk/curator/curator_config.yml
+---
+client:
+  hosts:
+    - 127.0.0.1
+  port: 9200
+  url_prefix:
+  use_ssl: False
+  certificate:
+  client_cert:
+  client_key:
+  ssl_no_validate: False
+  http_auth:
+  timeout: 30
+  master_only: False
+
+logging:
+  loglevel: INFO
+  logfile: /home/elk/curator/curator_logs.log
+  logformat: default
+  blacklist: ['elasticsearch', 'urllib3']
+EOF"
+
 }
 
 main() {
@@ -125,7 +190,12 @@ main() {
   install_logstash
   
   install_nginx
-  create_elk_supervisord_conf
+  
+  # used to delete elastic search indexes
+  # by date created
+  install_elastic_search_curator
+  setup_curator_actions
+  setup_curator_config
 }
 
 main "$@"

@@ -14,7 +14,8 @@ filebeat:
     -
       paths:
         - /home/vof/app/log/logstash_*.log
-        exclude_lines: ['/health{1}']
+
+      exclude_lines: ['/health{1}']
       #  - /var/log/*.log
 
       input_type: log

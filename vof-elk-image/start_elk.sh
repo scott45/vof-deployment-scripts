@@ -67,6 +67,17 @@ output {
 EOF'
 }
 
+create_curator_cronjob() {
+  cat > /home/elk/curator/curator_cron.yml <<'EOF'
+0 0 15 * * curator --config /home/elk/curator/curator_config.yml /home/elk/curator/curator_action.yml
+EOF
+}
+
+update_crontab() {
+  cat /home/elk/curator/curator_cron.yml | crontab
+  rm /home/elk/curator/curator_cron.yml
+}
+
 main() {
 
   configure_logstash_ssl
@@ -74,6 +85,9 @@ main() {
   create_logstash_input_config
   create_logstash_filter_config
   create_logstash_output_config
+
+  create_curator_cronjob
+  update_crontab
 }
 
 main "$@"

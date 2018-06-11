@@ -1,0 +1,168 @@
+- name: setup Jenkins master instance
+  hosts: all
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: no
+
+  tasks:
+    - name: Update apt cache
+      apt: 
+        update_cache: yes
+
+    - name: Add Java PPA
+      shell: add-apt-repository -y ppa:webupd8team/java
+
+    - name: echo flags
+      shell: |
+              echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | sudo debconf-set-selections
+
+    - name: Upadate cache
+      apt: 
+        update_cache: yes
+
+    - name: Install Java 8
+      shell: apt-get install -y oracle-java8-installer
+
+    - name: automatically set Java environment variables
+      shell: apt-get install -y oracle-java8-set-default
+
+    - name: Add repository key to the system
+      shell: wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
+
+    - name: When the key is added, the system will return OK. Next, we'll append the Debian package repository address to the server's sources.list
+      shell: |
+              sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+
+    - name: When both of these are in place, we'll run update so that apt-get will use the new repository
+      apt:
+        update_cache: yes
+
+    - name: install Jenkins and its dependencies
+      apt:
+        name:
+          - jenkins
+          - docker.io
+          - tree
+          - nginx
+          - supervisor
+          - unzip
+          - wget
+        state: present
+
+    - name: install terraform
+      shell: |
+              wget https://releases.hashicorp.com/terraform/0.11.1/terraform_0.11.1_linux_amd64.zip
+              unzip terraform_0.11.1_linux_amd64.zip -d terraform
+              mv terraform /usr/local/bin/
+
+    - name: Install Packer
+      shell: |
+              wget https://releases.hashicorp.com/packer/0.12.0/packer_0.12.0_linux_amd64.zip
+              unzip packer_0.12.0_linux_amd64.zip -d packer
+              mv packer /usr/local/
+              export PATH="$PATH:/usr/local/packer"
+
+    - name: configure jenkins user to access docker
+      shell: |
+              usermod -aG docker ubuntu
+              usermod -aG docker jenkins
+  
+    - name: check if file is has a symbolic link
+      stat: 
+        path: /etc/nginx/sites-enabled/default
+      register: app_file_symlink
+
+    - name: create symlink for app rule if it doesnt exist
+      file: src=/etc/nginx/sites-available/default dest=/etc/nginx/sites-enabled/default state=link force=true
+      when: app_file_symlink.stat.islnk is defined and app_file_symlink.stat.islnk == False
+      become: yes
+      become_method: sudo
+
+    - name: write app rule
+      shell: |
+              bash -c 'cat > /etc/nginx/sites-available/default <<EOF
+              server {
+                      server_name jenkins-staging.andela.com www.jenkins-staging.andela.com *.jenkins-staging.andela.com;
+                      location / {
+                              proxy_pass http://127.0.0.1:8080;
+                      }
+              }
+              EOF'
+
+    - name: restart nginx
+      shell: /etc/init.d/nginx restart
+
+    - name: start jenkins
+      shell: systemctl start jenkins
+
+    - name: Jenkins runs on port 8080, so we'll open that port using ufw
+      shell: ufw allow 8080
+
+    - name: enable OpenSSH
+      shell: ufw allow OpenSSH
+
+    - name: generate ssh key
+      shell: ssh-keygen -t rsa -N "" -f "/home/ubuntu/.ssh/id_rsa"
+
+    - name: update cache || equivalent of sudo apt-get update
+      apt:
+        update_cache: yes
+
+    - name: set up
+      shell: apt-get -y install software-properties-common
+
+    - name: set up certbox
+      shell: add-apt-repository ppa:certbot/certbot
+
+    - name: update
+      apt:
+        update_cache: yes
+
+    - name: install certbox
+      shell: apt-get -y install python-certbot-nginx
+      become: yes
+      become_method: sudo
+
+    - name: Create supervisor logs folder
+      file: 
+        path: /home/ubuntu/logs
+        owner: ubuntu 
+        group: ubuntu 
+        mode: 0755 
+        state: directory
+
+    - name: create supervisor logs file
+      stat:
+        path: /home/ubuntu/logs/certbot_supervisor.log
+      register: supervisor_log_file_cert
+
+    - name: Create the log file, if it doesnt exist already
+      file:
+        path: /home/ubuntu/logs/certbot_supervisor.log
+        state: touch
+      when: supervisor_log_file_cert.stat.exists == False
+
+    - name: write script to run certbot
+      shell: |
+              cat<<EOF > /home/ubuntu/run_certbot.sh
+              #!/bin/bash
+              sudo certbot --nginx  -d jenkins.andela.com -m code.ibra@gmail.com --agree-tos --non-interactive
+              sudo certbot renew --dry-run
+              sudo /etc/init.d/nginx restart
+
+    - name: write supervisor configuaration for certbot
+      shell: |
+              sudo bash -c 'cat > /etc/supervisor/conf.d/run_certbot.conf <<EOF
+              [program:run_certbot]
+              command =bash -c "/home/ubuntu/run_certbot.sh"
+              user =root
+              stdout_logfile =/home/ubuntu/logs/certbot_supervisor.log
+              redirect_stderr =true
+              environment=LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8
+              EOF'
+
+
+  pre_tasks:        
+    - name: 'install python2'
+      raw: sudo apt-get -y install python-simplejson

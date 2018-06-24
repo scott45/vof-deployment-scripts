@@ -62,7 +62,7 @@ GOOGLE_STORAGE_ACCESS_KEY_ID: '$(get_var "google_storage_access_key_id")'
 GOOGLE_STORAGE_SECRET_ACCESS_KEY: '$(get_var "google_storage_secret_access_key")'
 EOF
 
-if ["$RAILS_ENV" == "production"]; then
+if [ "$RAILS_ENV" == "production" ]; then
   cat <<EOF >> /home/vof/app/config/application.yml
 AUTH_URL: 'https://vof-tracker.herokuapp.com'
 AUTH_ACCESS_TOKEN: '2574fd1d8c985221c7053931b614359feaf981840fe1c65c9d79e4938899f036e0fe9a208d40f3137f76a79be51fe3d4d88b4eb68d5d44d0cc2e326559bbbf82'

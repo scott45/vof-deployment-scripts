@@ -17,13 +17,20 @@ install_system_dependencies() {
   sudo apt-get install -y --no-install-recommends git-core curl zlib1g-dev logrotate     \
     build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev \
     sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev wget nodejs unattended-upgrades     \
-    python-software-properties libffi-dev libpq-dev sudo vim less supervisor jq \
-    postgresql postgresql-contrib
+    python-software-properties libffi-dev libpq-dev sudo vim less supervisor jq 
+}
+
+install_postgresql_9.6(){
+  sudo add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -sc)-pgdg main"
+  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  sudo apt-get update
+  sudo apt-get install -y postgresql-9.6 postgresql-contrib
 }
 
 install_ruby(){
   if ! which ruby; then
     install_system_dependencies
+    install_postgresql_9.6
 
     sudo chgrp -R vof  /usr/local
     sudo chmod -R g+rw /usr/local

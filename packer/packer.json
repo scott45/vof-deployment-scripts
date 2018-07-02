@@ -25,7 +25,7 @@
 		{
 			"type": "file",
 			"source": "{{user `vof_path`}}",
-      		        "destination": "/home/vof/app"
+      		"destination": "/home/vof/app"
 		},
 		{
 			"type": "shell",
@@ -34,23 +34,32 @@
 		{
 			"type": "file",
 			"source": "start_vof.sh",
-      "destination": "/home/vof/start_vof.sh"
+      		"destination": "/home/vof/start_vof.sh"
 		},
 		{
 			"type": "file",
 			"source": "setup-scripts",
-      "destination": "/home/vof"
+      		"destination": "/home/vof"
 		},
 		{
 			"type": "file",
 			"source": "vault_token.sh",
-      "destination": "/home/vof/vault_token.sh"
+      		"destination": "/home/vof/vault_token.sh"
 		},
 		{
 			"type": "file",
 			"source": "{{ user `service_account_json`}}",
             "destination": "/home/vof/account.json"
+		},
+		{
+			"type": "file",
+			"source": "backup.sh",
+            "destination": "/home/vof/backup.sh"
+		},
+		{
+			"type": "file",
+			"source": "post_backup_to_slack.sh",
+            "destination": "/home/vof/post_backup_to_slack.sh"
 		}
-		
 	]
 }

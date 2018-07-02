@@ -77,6 +77,45 @@ EOF
 fi
 }
 
+create_pgpass_file(){
+  cat <<EOF > /home/vof/.pgpass
+$(get_var "databaseHost"):5432:$(get_var "databaseName"):$(get_var "databaseUser"):$(get_var "databasePassword")
+EOF
+sudo chown vof:vof /home/vof/.pgpass
+chmod 0600 /home/vof/.pgpass
+}
+
+edit_postgresql_backup_file(){
+  if [ "$RAILS_ENV" == "production" ]; then
+    # create backups directory
+    mkdir /home/vof/backups
+    #change permissions on backup folder
+    chmod 777 /home/vof/backups
+    chmod 777 /home/vof/post_backup_to_slack.sh
+    #make vof user owner of backups folder
+    sudo chown vof:vof /home/vof/backups
+    sudo chown vof:vof /home/vof/post_backup_to_slack.sh
+    # edit backup script to include required parameters
+    sed -i "s/pg_dump/pg_dump -h '$(get_var "databaseHost")' -U '$(get_var "databaseUser")' -d '$(get_var "databaseName")'/g" /home/vof/backup.sh
+    sed -i 's/token=/token=xoxp-2853699384-263982130276-387082319396-d501a1cc4fd490ea9bca01ce6de9674a/g' /home/vof/post_backup_to_slack.sh
+    #make vof user owner of backup.sh file
+    sudo chown vof:vof /home/vof/backup.sh
+    # change permissions on backup.sh file
+    chmod 777 /home/vof/backup.sh
+    # create cron jobs
+    cat > cron_file_create <<'EOF'
+# create cron job that creates database backup at 23:55 EAT daily
+55 20 * * * /bin/bash /home/vof/backup.sh
+# create cron job to post database backup at 00:00 EAT daily
+0 21 * * * /bin/bash /home/vof/post_backup_to_slack.sh
+# create cron job to delete database backup files from server at 00:05 EAT daily
+5 21 * * * /bin/rm -r /home/vof/backups/vof-*
+EOF
+    # add cron jobs to crontab
+    crontab -u vof cron_file_create 
+  fi
+}
+
 create_secrets_yml() {
   cat <<EOF > /home/vof/app/config/secrets.yml
 production:
@@ -310,6 +349,8 @@ main() {
   echo "startup script invoked at $(date)" >> /tmp/script.log
 
   create_log_files
+  create_pgpass_file
+  edit_postgresql_backup_file
   update_application_yml
   create_secrets_yml
   create_vof_supervisord_conf

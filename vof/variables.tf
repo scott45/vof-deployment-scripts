@@ -193,3 +193,7 @@ variable "user_microservice_api_token" {}
 variable "google_storage_access_key_id" {}
 
 variable "google_storage_secret_access_key" {}
+
+variable "db_backup_notification_token" {
+  type = "string"
+}

@@ -70,6 +70,7 @@ resource "google_compute_instance_template" "vof-app-server-template" {
     userMicroserviceApiToken         = "${var.user_microservice_api_token}"
     google_storage_access_key_id     = "${var.google_storage_access_key_id}"
     google_storage_secret_access_key = "${var.google_storage_secret_access_key}"
+    dbBackupNotificationToken        = "${var.db_backup_notification_token}"
   }
 
   lifecycle {

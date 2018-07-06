@@ -97,7 +97,7 @@ edit_postgresql_backup_file(){
     sudo chown vof:vof /home/vof/post_backup_to_slack.sh
     # edit backup script to include required parameters
     sed -i "s/pg_dump/pg_dump -h '$(get_var "databaseHost")' -U '$(get_var "databaseUser")' -d '$(get_var "databaseName")'/g" /home/vof/backup.sh
-    sed -i 's/token=/token=xoxp-2853699384-263982130276-387082319396-d501a1cc4fd490ea9bca01ce6de9674a/g' /home/vof/post_backup_to_slack.sh
+    sed -i "s/token=/token='$(get_var "dbBackupNotificationToken")'/g" /home/vof/post_backup_to_slack.sh
     #make vof user owner of backup.sh file
     sudo chown vof:vof /home/vof/backup.sh
     # change permissions on backup.sh file
@@ -112,7 +112,7 @@ edit_postgresql_backup_file(){
 5 21 * * * /bin/rm -r /home/vof/backups/vof-*
 EOF
     # add cron jobs to crontab
-    crontab -u vof cron_file_create 
+    crontab -u vof cron_file_create
   fi
 }
 
@@ -165,7 +165,7 @@ authorize_database_access_networks() {
   # ensure replica's authorized networks are also updated
   for sqlInstanceName in $(gcloud sql instances list --project vof-tracker-app | grep ${RAILS_ENV}-vof-database-instance | awk -v ORS=" " '{if ($1 !~ /production-vof-database-instance-vew0wndaum8/) print $1}'); do
     gcloud sql instances patch $sqlInstanceName --quiet --authorized-networks=$CURRENTIPS,41.75.89.154,158.106.201.190,41.215.245.162,108.41.204.165,14.140.245.142,182.74.31.70,54.208.19.24,35.166.153.63,54.208.19.13,54.69.5.5,52.36.120.247,52.45.79.49,34.199.147.194
-  done 
+  done
 
 }
 

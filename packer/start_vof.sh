@@ -64,13 +64,13 @@ EOF
 
 if [ "$RAILS_ENV" == "production" ]; then
   cat <<EOF >> /home/vof/app/config/application.yml
-AUTH_URL: 'https://vof-tracker.herokuapp.com'
+AUTH_URL: 'https://vof-login-prod.andela.com'
 AUTH_ACCESS_TOKEN: '2574fd1d8c985221c7053931b614359feaf981840fe1c65c9d79e4938899f036e0fe9a208d40f3137f76a79be51fe3d4d88b4eb68d5d44d0cc2e326559bbbf82'
 PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu/PXShcrLcoKYYr6sAuU\nGPjmb0qSwo5aYDjnXJ2fWbzeC+PadR2n6Pn9vWwZzOv6nSM5ocVNNRpAyHvT0mQf\n7DikDJANSwpQHwYpKkgdBDydzMeOBhFpkhLeUOfnF4a/sfB8OP+/PvW5vsRhx4WR\n+1PZDFXuCq/AbcBuzBsNJ8Q3gmB2/m7VeltIb5QXIs5zHCFC0tLS/WCNYfcfhviW\n7sz3qVSggrhEs2SgpvMBwiQHwNkP7/vfrNl6pKctLTvibdlWfF9JiER+a8Eq/Dge\nSnt70Gtn5rQnkN08DNLfxjiSskzef8pNh+9H5oI7Ee5UJpIOEyQ7p+XzEDzT1zy5\nTQIDAQAB\n-----END PUBLIC KEY-----"
 EOF
 else
  cat <<EOF >> /home/vof/app/config/application.yml
-AUTH_URL: 'https://micro-login-staging.herokuapp.com'
+AUTH_URL: 'https://vof-login-staging.andela.com'
 PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu/PXShcrLcoKYYr6sAuU\nGPjmb0qSwo5aYDjnXJ2fWbzeC+PadR2n6Pn9vWwZzOv6nSM5ocVNNRpAyHvT0mQf\n7DikDJANSwpQHwYpKkgdBDydzMeOBhFpkhLeUOfnF4a/sfB8OP+/PvW5vsRhx4WR\n+1PZDFXuCq/AbcBuzBsNJ8Q3gmB2/m7VeltIb5QXIs5zHCFC0tLS/WCNYfcfhviW\n7sz3qVSggrhEs2SgpvMBwiQHwNkP7/vfrNl6pKctLTvibdlWfF9JiER+a8Eq/Dge\nSnt70Gtn5rQnkN08DNLfxjiSskzef8pNh+9H5oI7Ee5UJpIOEyQ7p+XzEDzT1zy5\nTQIDAQAB\n-----END PUBLIC KEY-----"
 AUTH_ACCESS_TOKEN: '48572b447d4f96cad034cb9f6ed9d0885864de64d77c4fd90bd90164998b1fd471ba2011b3a409c107a7032529abc9f4c3456da0cd74ac7b249086440bb2daab'
 EOF

@@ -3,6 +3,7 @@ resource "google_compute_backend_service" "web" {
   description = "VOF Load Balancer"
   port_name   = "customhttps"
   protocol    = "HTTPS"
+  timeout_sec = 120
   enable_cdn  = false
 
   backend {
@@ -10,7 +11,6 @@ resource "google_compute_backend_service" "web" {
   }
 
   session_affinity = "GENERATED_COOKIE"
-  timeout_sec      = 0
 
   health_checks = ["${google_compute_https_health_check.vof-app-healthcheck.self_link}"]
 }

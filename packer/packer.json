@@ -60,11 +60,6 @@
 			"type": "file",
 			"source": "post_backup_to_slack.sh",
             "destination": "/home/vof/post_backup_to_slack.sh"
-		},
-		{
-			"type": "file",
-			"source": "downtime.sh",
-			"destination": "/home/vof/downtime.sh"
 		}
 	]
 }

@@ -283,6 +283,13 @@ update_crontab() {
   rm upgrades_cron log_cron supervisord_cron
 }
 
+restart_unattended_upgrades() {
+  sudo systemctl start apt-daily.service
+  sudo systemctl start apt-daily.timer
+  sudo systemctl start apt-daily-upgrade.service
+  sudo systemctl start apt-daily-upgrade.timer
+}
+
 main() {
   echo "startup script invoked at $(date)" >> /tmp/script.log
 
@@ -302,7 +309,6 @@ main() {
   get_database_dump_file
   start_bugsnag
 
-  install_filebeat
   setup_filebeat
 
   install_metricbeat
@@ -315,6 +321,8 @@ main() {
   create_unattended_upgrades_cronjob
   create_supervisord_cronjob
   update_crontab
+
+  restart_unattended_upgrades
 
   # Setup Vault
   # source /home/vof/vault_token.sh

@@ -1,10 +1,3 @@
-install_filebeat(){
-  curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.4-amd64.deb
-  sudo dpkg -i filebeat-6.2.4-amd64.deb
-  sudo apt-get update
-  
-}
-
 create_filebeat_config_file(){
 
   sudo mv /etc/filebeat/filebeat.yml /etc/filebeat/filebeat_old.yml
@@ -19,7 +12,7 @@ filebeat:
       #  - /var/log/*.log
 
       input_type: log
-      
+
       document_type: syslog
 
   registry_file: /var/lib/filebeat/registry

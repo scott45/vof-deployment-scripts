@@ -1,10 +1,3 @@
-
-install_metricbeat(){
-  curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.2.4-amd64.deb
-  sudo dpkg -i metricbeat-6.2.4-amd64.deb
-  sudo apt-get update
-}
-
 setup_metricbeat(){
 
   sudo bash -c 'cat <<EOF > /etc/metricbeat/metricbeat.yml

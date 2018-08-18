@@ -116,6 +116,21 @@ EOF
   fi
 }
 
+create_delete_images_cronjob() {
+  chmod 777 /home/vof/delete_images.sh
+  # add existing cronjobs to cron_delete_images to avoid overwriting them
+  if [ "$RAILS_ENV" == "production" ]; then
+    crontab -l -u vof > cron_delete_images
+  fi
+  cat >> cron_delete_images <<'EOF'
+# create cron job that deletes unused images every 1st of the month
+0 0 1 * * /bin/bash /home/vof/delete_images.sh >/dev/null 2>&1
+EOF
+
+  # add all cron jobs to crontabs
+  crontab -u vof cron_delete_images
+}
+
 create_secrets_yml() {
   cat <<EOF > /home/vof/app/config/secrets.yml
 production:
@@ -308,6 +323,7 @@ main() {
   start_app
   configure_google_fluentd_logging
 
+  create_delete_images_cronjob
   configure_logrotate
   create_unattended_upgrades_cronjob
   create_supervisord_cronjob

@@ -65,6 +65,11 @@
       "type": "file",
       "source": "delete_images.sh",
       "destination": "/home/vof/delete_images.sh"
+    },
+    {
+      "type": "file",
+      "source": "downtime.sh",
+      "destination": "/home/vof/downtime.sh"
     }
   ]
 }

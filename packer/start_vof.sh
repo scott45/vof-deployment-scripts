@@ -118,7 +118,7 @@ EOF
 
 create_delete_images_cronjob() {
   chmod 777 /home/vof/delete_images.sh
-  #On production, add existing cronjobs(post backups) to cron_delete_images
+  # On production, add existing cronjobs(post backups) to cron_delete_images
   # to avoid overwriting it
   if [ "$RAILS_ENV" == "production" ]; then
     crontab -l -u vof > cron_delete_images
@@ -302,7 +302,7 @@ EOF
 
 create_unattended_upgrades_cronjob() {
   cat > upgrades_cron <<'EOF'
-0 9 * * 5 /bin/bash -lc 'source /home/vof/.env_setup_rc; curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"unattended-upgrades\", \"text\": \"*Unattended upgrades report from $(uname -n)*\n>>>$(sudo unattended-upgrade -v)\", \"icon_emoji\": \":bell:\"}" $(echo $SLACK_WEBHOOK)'
+0 1 * * 7 /bin/bash -lc 'source /home/vof/.env_setup_rc; curl -X POST --data-urlencode "payload={\"channel\": \"$(echo $SLACK_CHANNEL)\", \"username\": \"unattended-upgrades\", \"text\": \"*Unattended upgrades report from $(uname -n)*\n>>>$(sudo unattended-upgrade -v)\", \"icon_emoji\": \":bell:\"}" $(echo $SLACK_WEBHOOK)'
 EOF
 
 }

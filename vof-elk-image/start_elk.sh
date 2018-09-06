@@ -78,16 +78,25 @@ update_crontab() {
   rm /home/elk/curator/curator_cron.yml
 }
 
+#add a job to the daily crontab directory
+#this functions calls a command to unlock kibana and allow it to receive all the logs.
+#logs are blocked incase the instance reaches the memory threshold. They must be manually unlocked
+add_cronjob_to_unlock_logs_daily() {
+    sudo touch /etc/cron.daily/unlock-kibana-logs
+    cat <<EOF > /etc/cron.daily/unlock-kibana-logs
+curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+EOF
+}
+
 main() {
 
   configure_logstash_ssl
-  
   create_logstash_input_config
   create_logstash_filter_config
   create_logstash_output_config
-
   create_curator_cronjob
   update_crontab
+  add_cronjob_to_unlock_logs_daily
 }
 
 main "$@"

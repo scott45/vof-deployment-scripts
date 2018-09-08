@@ -30,7 +30,7 @@ resource "google_sql_database_instance" "vof-database-instance" {
     }
 
     backup_configuration {
-      binary_log_enabled = true
+      binary_log_enabled = false
       enabled = true
       start_time = "${var.db_backup_start_time}"
     }

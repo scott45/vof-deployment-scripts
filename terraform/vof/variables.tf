@@ -1,6 +1,14 @@
+# provider
+
 variable "region" {
   type    = "string"
   default = "europe-west1"
+}
+
+variable "project_name" {}
+
+variable "redis_domain" {
+  default = "apprenticeship-redis.andela.com"
 }
 
 variable "zone" {
@@ -8,7 +16,13 @@ variable "zone" {
   default = "europe-west1-b"
 }
 
-variable "reserved_env_ip" {}
+# network
+variable "admin_peer_network_name" {
+  description = "Google compute network name"
+  default     = "apprenticeship-admin-network"
+}
+
+variable "global_static_ip" {}
 
 variable "bucket" {}
 
@@ -17,9 +31,8 @@ variable "base_image" {
   default = "ubuntu-1604-xenial-v20170815a"
 }
 
-variable "project_id" {
-  type    = "string"
-  default = "vof-migration-test"
+variable "google_project_id" {
+  type = "string"
 }
 
 variable "machine_type" {
@@ -34,10 +47,10 @@ variable "small_machine_type" {
 
 variable "credential_file" {
   type    = "string"
-  default = "../shared/account.json"
+  default = "../../shared/account.json"
 }
 
-variable "env_name" {
+variable "environment" {
   type = "string"
 }
 
@@ -46,25 +59,43 @@ variable "state_path" {
 }
 
 variable "max_instances" {
-  type    = "string"
-  default = "4"
+  type = "map"
+
+  default = {
+    production = 3
+    staging    = 1
+    sandbox    = 1
+  }
 }
 
 variable "min_instances" {
-  type    = "string"
-  default = "2"
+  type = "map"
+
+  default = {
+    production = 2
+    staging    = 1
+    sandbox    = 1
+  }
 }
 
-variable "vof_disk_image" {
+variable "shared_database_instance_name" {}
+
+variable "shared_database_instance_ip" {}
+
+variable "health_checks_port" {
+  default = "8080"
+}
+
+variable "disk_image" {
   type = "string"
 }
 
-variable "vof_disk_type" {
+variable "disk_type" {
   type    = "string"
   default = "pd-ssd"
 }
 
-variable "vof_disk_size" {
+variable "disk_size" {
   type    = "string"
   default = "10"
 }
@@ -100,27 +131,27 @@ variable "ip_cidr_range" {
 }
 
 variable "staging_ip_cidr_range" {
-  type = "string"
+  type    = "string"
   default = "10.1.0.0/24"
 }
 
 variable "sandbox_ip_cidr_range" {
-  type = "string"
+  type    = "string"
   default = "10.2.0.0/24"
 }
 
 variable "ip_cidr_range_next" {
-  type = "string"
+  type    = "string"
   default = "10.0.1.0/24"
 }
 
 variable "staging_ip_cidr_range_next" {
-  type = "string"
+  type    = "string"
   default = "10.1.1.0/24"
 }
 
 variable "sandbox_ip_cidr_range_next" {
-  type = "string"
+  type    = "string"
   default = "10.2.1.0/24"
 }
 

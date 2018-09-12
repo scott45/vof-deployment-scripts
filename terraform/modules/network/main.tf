@@ -1,5 +1,5 @@
 resource "google_compute_network" "network" {
-  name                    = "${format("%s-%-network", var.project_name, var.environment)}"
+  name                    = "${format("%s-%s-network", var.project_name, var.environment)}"
   auto_create_subnetworks = "${var.auto_create_subnetworks}"
 }
 

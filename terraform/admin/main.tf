@@ -10,12 +10,12 @@ terraform {
   }
 }
 
-data "terraform_remote_state" "vof" {
+data "terraform_remote_state" "admin" {
   backend = "gcs"
 
   config {
-    bucket      = "${var.bucket}"
-    path        = "${var.state_path}"
+    bucket      = "${var.admin_bucket}"
+    path        = "${var.terraform_state_path}"
     project     = "${var.google_project_id}"
     credentials = "${file("${var.credential_file}")}"
   }

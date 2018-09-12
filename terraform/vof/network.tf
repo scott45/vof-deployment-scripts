@@ -15,7 +15,7 @@ module "project_network" {
   # vof-production-to-admin-network-peering
   name         = "${format("%s-%s-to-admin-network-peering", var.project_name, var.environment)}"
   network      = "${module.network.self_link}"
-  peer_network = "${format("projects/%s/global/networks/%s", var.project_id, var.admin_peer_network_name)}"
+  peer_network = "${format("projects/%s/global/networks/%s", var.google_project_id, var.admin_peer_network_name)}"
 }
 
 module "admin_network" {

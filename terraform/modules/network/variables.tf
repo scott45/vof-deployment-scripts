@@ -17,3 +17,7 @@ variable "public_ip_cidr_range" {
 variable "environment" {
   description = "Product deployment environment"
 }
+
+variable "auto_create_subnetworks" {
+  default = false
+}

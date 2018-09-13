@@ -1,14 +1,10 @@
 variable "ip_cidr_ranges" {
-  type    = "list"
-  default = ["192.168.1.0/24"]
-}
+  type = "map"
 
-variable "private_ip_cidr_range" {
-  description = "Google compute private network cidr notation"
-}
-
-variable "public_ip_cidr_range" {
-  description = "Google compute public network cidr notation"
+  default = {
+    private_ip_cidr_range = "10.2.0.0/24"
+    public_ip_cidr_range  = "10.3.0.0/24"
+  }
 }
 
 variable "region" {
@@ -16,7 +12,7 @@ variable "region" {
   default = "europe-west1"
 }
 
-variable "elk_reserved_env_ip" {
+variable "elk_reserved_static_ip" {
   type = "string"
 }
 
@@ -40,7 +36,7 @@ variable "service_account_email" {
 
 variable "credential_file" {
   type    = "string"
-  default = "../shared/account.json"
+  default = "../../shared/account.json"
 }
 
 variable "google_project_id" {
@@ -48,14 +44,31 @@ variable "google_project_id" {
 }
 
 variable "admin_bucket" {
-  type = "string"
+  type    = "string"
+  default = "apprenticeship"
 }
 
 variable "terraform_state_path" {
   type    = "string"
-  default = "state/admin/terraform.tfstate"
+  default = "admin/terraform/default.tfstate"
 }
 
 variable "project_name" {
   description = "Google compute project name"
+}
+
+variable "bastion_image" {
+  default = "ubuntu-1604-xenial-v20180912"
+}
+
+variable "elk_source_ranges" {
+  default = ["0.0.0.0/0"]
+}
+
+variable "elk_server_image" {
+  default = "ubuntu-1604-xenial-v20180912"
+}
+
+variable "redis_server_image" {
+  default = "ubuntu-1604-xenial-v20180912"
 }

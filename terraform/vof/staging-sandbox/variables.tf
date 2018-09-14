@@ -22,8 +22,6 @@ variable "admin_peer_network_name" {
   default     = "apprenticeship-admin-network"
 }
 
-variable "global_static_ip" {}
-
 variable "bucket" {}
 
 variable "base_image" {
@@ -35,26 +33,21 @@ variable "google_project_id" {
   type = "string"
 }
 
-variable "machine_type" {
-  type    = "string"
-  default = "n1-standard-1"
-}
+variable "machine_types" {
+  type = "map"
 
-variable "small_machine_type" {
-  type    = "string"
-  default = "g1-small"
+  default = {
+    "standard" = "n1-standard-1"
+    "small"    = "g1-small"
+  }
 }
 
 variable "credential_file" {
   type    = "string"
-  default = "../../shared/account.json"
+  default = "../../../shared/account.json"
 }
 
 variable "environment" {
-  type = "string"
-}
-
-variable "state_path" {
   type = "string"
 }
 
@@ -78,7 +71,9 @@ variable "min_instances" {
   }
 }
 
-variable "shared_database_instance_name" {}
+variable "shared_database_instance_name" {
+  type = "string"
+}
 
 variable "shared_database_instance_ip" {}
 
@@ -87,7 +82,8 @@ variable "health_checks_port" {
 }
 
 variable "disk_image" {
-  type = "string"
+  type    = "string"
+  default = "ubuntu-1604-xenial-v20180912"
 }
 
 variable "disk_type" {
@@ -123,36 +119,6 @@ variable "healthy_threshold" {
 variable "timeout_sec" {
   type    = "string"
   default = "1"
-}
-
-variable "ip_cidr_range" {
-  type    = "string"
-  default = "10.0.0.0/24"
-}
-
-variable "staging_ip_cidr_range" {
-  type    = "string"
-  default = "10.1.0.0/24"
-}
-
-variable "sandbox_ip_cidr_range" {
-  type    = "string"
-  default = "10.2.0.0/24"
-}
-
-variable "ip_cidr_range_next" {
-  type    = "string"
-  default = "10.0.1.0/24"
-}
-
-variable "staging_ip_cidr_range_next" {
-  type    = "string"
-  default = "10.1.1.0/24"
-}
-
-variable "sandbox_ip_cidr_range_next" {
-  type    = "string"
-  default = "10.2.1.0/24"
 }
 
 variable "db_username" {
@@ -212,6 +178,41 @@ variable "cable_url" {
 }
 
 variable "redis_ip" {
+  type = "string"
+}
+
+variable "global_static_ip" {
+  type = "string"
+}
+
+variable "ip_cidr_ranges" {
+  type = "map"
+
+  # TODO
+  # Fix how cidr blocks are picked up
+  default = {
+    staging_private_ip_cidr_range = "10.10.0.0/24"
+    staging_public_ip_cidr_range  = "10.12.0.0/24"
+    sandbox_private_ip_cidr_range = "10.8.0.0/24"
+    sandbox_public_ip_cidr_range  = "10.9.0.0/24"
+  }
+}
+
+variable "database_host_ip" {
+  type    = "string"
+  default = ""
+}
+
+variable "bastion_host_ip" {
+  type = "string"
+}
+
+variable "vof_bucket" {
+  type    = "string"
+  default = "apprenticeship"
+}
+
+variable "terraform_state_path" {
   type = "string"
 }
 

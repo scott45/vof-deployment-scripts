@@ -141,8 +141,12 @@ resource "google_compute_instance" "bastion_host" {
   }
 
   network_interface {
-    subnetwork    = "${module.network.public_network_name}"
-    access_config = {}
+    subnetwork = "${module.network.public_network_name}"
+
+    access_config = {
+      # Static IP
+      nat_ip = "${var.bastion_host_ip}"
+    }
   }
 
   metadata {

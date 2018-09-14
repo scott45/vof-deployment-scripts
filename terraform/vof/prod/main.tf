@@ -1,4 +1,5 @@
 provider "google" {
+  version     = "<= 1.17"
   credentials = "${file("${var.credential_file}")}"
   project     = "${var.google_project_id}"
   region      = "${var.region}"
@@ -6,7 +7,8 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    credentials = "../shared/account.json"
+    bucket = "apprenticeship"
+    prefix = "vof/terraform"
   }
 }
 
@@ -14,8 +16,7 @@ data "terraform_remote_state" "vof" {
   backend = "gcs"
 
   config {
-    bucket      = "${var.bucket}"
-    path        = "${var.state_path}"
+    bucket      = "${var.vof_bucket}"
     project     = "${var.google_project_id}"
     credentials = "${file("${var.credential_file}")}"
   }

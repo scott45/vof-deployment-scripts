@@ -6,7 +6,8 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    credentials = "../shared/account.json"
+    bucket = "apprenticeship"
+    prefix = "admin/terraform"
   }
 }
 

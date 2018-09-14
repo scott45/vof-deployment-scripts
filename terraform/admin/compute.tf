@@ -3,11 +3,15 @@ resource "google_compute_instance" "elk_instance" {
   machine_type = "${lookup(var.machine_types, "standard")}"
   zone         = "${var.zone}"
 
-  tags = ["http-server", "https-server", "${var.project_name}-elk-instance"]
+  tags = [
+    "http-server",
+    "https-server",
+    "${var.project_name}-elk-instance",
+  ]
 
   boot_disk {
     initialize_params {
-      image = "${format("%s-elk-base-image", var.project_name)}"
+      image = "${var.elk_server_image}"
     }
   }
 
@@ -20,7 +24,7 @@ resource "google_compute_instance" "elk_instance" {
     subnetwork = "${module.network.private_network_name}"
 
     access_config {
-      nat_ip = "${var.elk_reserved_env_ip}"
+      nat_ip = "${google_compute_address.elk_ip.address}"
     }
   }
 
@@ -45,11 +49,7 @@ resource "google_compute_firewall" "elk_peer_traffic" {
     ports    = ["0-65535"]
   }
 
-  source_ranges = [
-    "10.0.0.0/24",
-    "10.1.0.0/24",
-    "10.2.0.0/24",
-  ]
+  source_ranges = ["${var.elk_source_ranges}"]
 }
 
 resource "google_compute_firewall" "elk_public_traffic" {
@@ -78,7 +78,7 @@ resource "google_compute_instance" "redis" {
 
   boot_disk {
     initialize_params {
-      image = "${format("%s-redis-image", var.project_name)}"
+      image = "${var.redis_server_image}"
     }
   }
 
@@ -108,6 +108,11 @@ resource "google_compute_address" "redis_ip" {
   region = "${var.region}"
 }
 
+resource "google_compute_address" "elk_ip" {
+  name   = "${format("%s-elk-ip", var.project_name)}"
+  region = "${var.region}"
+}
+
 resource "google_compute_firewall" "redis_traffic" {
   name    = "${format("%s-redis-firewall", var.project_name)}"
   network = "${module.network.self_link}"
@@ -131,7 +136,7 @@ resource "google_compute_instance" "bastion_host" {
 
   boot_disk {
     initialize_params {
-      image = "${var.bastion_host_image}"
+      image = "${var.bastion_image}"
     }
   }
 

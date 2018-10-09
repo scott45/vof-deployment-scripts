@@ -8,15 +8,15 @@ provider "google" {
 terraform {
   backend "gcs" {
     bucket = "apprenticeship"
-    prefix = "admin/terraform"
+    prefix = "vof/terraform"
   }
 }
 
-data "terraform_remote_state" "admin" {
+data "terraform_remote_state" "vof" {
   backend = "gcs"
 
   config {
-    bucket      = "${var.admin_bucket}"
+    bucket      = "${var.vof_bucket}"
     project     = "${var.google_project_id}"
     credentials = "${file("${var.credential_file}")}"
   }

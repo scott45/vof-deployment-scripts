@@ -2,6 +2,7 @@
 **/terraform.tfstate.backup
 **/terraform.tfstate
 **/terraform.tfvars
+**/terraform.tfvars.sample
 .terraform/
 .*.swp
 .*.swo

@@ -12,10 +12,6 @@ variable "region" {
   default = "europe-west1"
 }
 
-variable "elk_reserved_static_ip" {
-  type = "string"
-}
-
 variable "machine_types" {
   type = "map"
 
@@ -59,6 +55,10 @@ variable "project_name" {
 
 variable "bastion_image" {
   default = "ubuntu-1604-xenial-v20180912"
+}
+
+variable "bastion_host_ip" {
+  type = "string"
 }
 
 variable "elk_source_ranges" {

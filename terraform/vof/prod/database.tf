@@ -15,13 +15,13 @@ resource "google_sql_database_instance" "instance" {
   database_version = "POSTGRES_9_6"
 
   # vof-production-database-instance-hjErad664")
-  name = "${format(
+  name = "${var.environment=="production" ? format(
     "%s-%s-database-instance-%s",
     var.project_name, var.environment,
-    "${replace(lower(random_id.database_instance_name.b64), "_", "-")}")}"
+    "${replace(lower(random_id.database_instance_name.b64), "_", "-")}"): var.shared_database_instance_name}"
 
   project = "${var.google_project_id}"
-  count   = "${var.environment == "production" ? 1 : 0}"
+  count   = 1
 
   settings {
     tier              = "${var.db_instance_tier}"
@@ -53,8 +53,8 @@ resource "google_sql_database" "database" {
 
   instance = "${
     var.environment == "production"
-   ? google_sql_database_instance.instance.name
-   : var.shared_database_instance_name}"
+    ? google_sql_database_instance.instance.name
+    : var.shared_database_instance_name}"
 }
 
 resource "google_sql_user" "database-user" {
@@ -64,6 +64,6 @@ resource "google_sql_user" "database-user" {
 
   instance = "${
     var.environment == "production"
-   ? google_sql_database_instance.instance.name
-   : var.shared_database_instance_name}"
+    ? google_sql_database_instance.instance.name
+    : var.shared_database_instance_name}"
 }

@@ -13,7 +13,7 @@ resource "google_compute_backend_service" "web" {
 
   session_affinity = "GENERATED_COOKIE"
 
-  health_checks = ["${google_compute_https_health_check.vof-app-healthcheck.self_link}"]
+  health_checks = ["${google_compute_https_health_check.healthcheck.self_link}"]
 }
 
 resource "google_compute_instance_group_manager" "manager" {
@@ -21,7 +21,7 @@ resource "google_compute_instance_group_manager" "manager" {
   name = "${format("%s-%s-instance-group-manager", var.project_name, var.environment)}"
 
   # vof-production-app-instance
-  base_instance_name = "${format("%s-%s-app-instance", var.project_name.var.environment)}"
+  base_instance_name = "${format("%s-%s-app-instance", var.project_name, var.environment)}"
   instance_template  = "${google_compute_instance_template.template.self_link}"
   zone               = "${var.zone}"
   update_strategy    = "NONE"
@@ -34,16 +34,11 @@ resource "google_compute_instance_group_manager" "manager" {
 
 resource "google_compute_instance_template" "template" {
   # vof-production-template-mknnkjnkn
-  name_prefix          = "${format("%s-%s-template", var.project_name, var.environment)}"
-  machine_type         = "${var.machine_type}"
+  name_prefix          = "${format("%s-%s-template-", var.project_name, var.environment)}"
+  machine_type         = "${lookup(var.machine_types, "standard")}"
   region               = "${var.region}"
   description          = "Base template to create ${var.project_name} instances"
   instance_description = "Instance created from base template"
-
-  depends_on = [
-    "google_sql_database_instance.instance",
-    "random_id.database_password",
-  ]
 
   tags = [
     # vof-production-app-server
@@ -53,7 +48,7 @@ resource "google_compute_instance_template" "template" {
   ]
 
   network_interface {
-    subnetwork    = "${module.project_network.private_network_name}"
+    subnetwork    = "${module.network.private_network_name}"
     access_config = {}
   }
 
@@ -71,7 +66,7 @@ resource "google_compute_instance_template" "template" {
     databasePort                     = "5432"
     databaseName                     = "${format("%s-%s", var.project_name, var.environment )}"
     redisIp                          = "${var.redis_domain}:6379"
-    railsEnv                         = "${var.env_name}"
+    railsEnv                         = "${var.environment}"
     bucketName                       = "${var.bucket}"
     slackChannel                     = "${var.slack_channel}"
     slackWebhook                     = "${var.slack_webhook_url}"
@@ -83,25 +78,22 @@ resource "google_compute_instance_template" "template" {
     google_storage_secret_access_key = "${var.google_storage_secret_access_key}"
     dbBackupNotificationToken        = "${var.db_backup_notification_token}"
 
-    databaseInstanceName = "${format(
-    "%s-%s-database-instance-%s",
-    var.project_name, var.environment,
-    "${replace(lower(random_id.database_name.b64), "_", "-")}")}"
+    databaseInstanceName = "${var.environment == "production"
+? format("%s-%s-database-instance-%s", var.project_name, var.environment,
+"${replace(lower(random_id.database_instance_name.b64), "_", "-")}") :
+var.shared_database_instance_name}"
 
     databaseUser = "${
-      var.environment =="production"
-     ? random_id.database_username.b64
-     : format("%s-%s", var.project_name, var.environment)}"
+var.environment =="production"
+? random_id.database_username.b64
+: format("%s-%s", var.project_name, var.environment)}"
 
     databasePassword = "${
-      var.environment =="production"
-      ? random_id.database_password.b64
-      : format("%s-%s", var.project_name, var.environment)}"
+var.environment =="production"
+? random_id.database_password.b64
+: format("%s-%s", var.project_name, var.environment)}"
 
-    databaseHost = "${
-      var.environment =="production"
-      ? google_sql_database_instance.instance.ip_address.0.ip_address
-      : var.shared_database_instance_ip}"
+    databaseHost = "${var.shared_database_instance_ip}"
   }
 
   lifecycle {
@@ -128,13 +120,13 @@ resource "google_compute_instance_template" "template" {
 
 resource "google_compute_autoscaler" "autoscaler" {
   # vof-production-app-autoscaler
-  name   = "${format("%s-%s-app-autoscaler", var.project_name, var.project_name)}"
+  name   = "${format("%s-%s-app-autoscaler", var.project_name, var.environment)}"
   zone   = "${var.zone}"
   target = "${google_compute_instance_group_manager.manager.self_link}"
 
   autoscaling_policy = {
-    max_replicas    = "${var.max_instances[var.environment]}"
-    min_replicas    = "${var.min_instances[var.environment]}"
+    max_replicas    = "${lookup(var.max_instances, var.environment)}"
+    min_replicas    = "${lookup(var.min_instances, var.environment)}"
     cooldown_period = 60
 
     cpu_utilization {
@@ -152,4 +144,8 @@ resource "google_compute_https_health_check" "healthcheck" {
   timeout_sec         = "${var.timeout_sec}"
   unhealthy_threshold = "${var.unhealthy_threshold}"
   healthy_threshold   = "${var.healthy_threshold}"
+}
+
+resource "google_compute_global_address" "global_static_ip" {
+  name = "${format("%s-%s-global-static-ip", var.project_name, var.environment)}"
 }

@@ -2,7 +2,7 @@
 resource "google_compute_global_forwarding_rule" "http" {
   # vof-production-http
   name       = "${format("%s-%s-http", var.project_name, var.environment)}"
-  ip_address = "${var.global_static_ip}"
+  ip_address = "${google_compute_global_address.global_static_ip.address}"
   target     = "${google_compute_target_http_proxy.http-proxy.self_link}"
   port_range = "80"
 }
@@ -19,7 +19,7 @@ resource "google_compute_target_http_proxy" "http-proxy" {
 resource "google_compute_global_forwarding_rule" "https" {
   # vof-production-https
   name       = "${format("%s-%s-https", var.project_name, var.environment)}"
-  ip_address = "${var.global_static_ip}"
+  ip_address = "${google_compute_global_address.global_static_ip.address}"
   target     = "${google_compute_target_https_proxy.https-proxy.self_link}"
   port_range = "443"
 }
@@ -27,8 +27,8 @@ resource "google_compute_global_forwarding_rule" "https" {
 resource "google_compute_ssl_certificate" "ssl-certificate" {
   name_prefix = "${var.project_name}-certificate-"
   description = "${upper(var.project_name)} HTTPS certificate"
-  private_key = "${file("../shared/andela_key.key")}"
-  certificate = "${file("../shared/andela_certificate.crt")}"
+  private_key = "${file("../../../shared/andela_key.key")}"
+  certificate = "${file("../../../shared/andela_certificate.crt")}"
 
   lifecycle {
     create_before_destroy = true
@@ -48,7 +48,7 @@ resource "google_compute_url_map" "http-url-map" {
   default_service = "${google_compute_backend_service.web.self_link}"
 
   host_rule {
-    hosts        = ["${var.global_static_ip}"]
+    hosts        = ["${google_compute_global_address.global_static_ip.address}"]
     path_matcher = "allpaths"
   }
 
@@ -65,7 +65,7 @@ resource "google_compute_url_map" "http-url-map" {
 
 resource "google_compute_firewall" "internal-firewall" {
   name    = "${format("%s-%s-internal-network", var.project_name, var.environment)}"
-  network = "${module.project_network.network_name}"
+  network = "${module.network.network_name}"
 
   allow {
     protocol = "icmp"
@@ -82,8 +82,9 @@ resource "google_compute_firewall" "internal-firewall" {
   }
 
   source_ranges = [
-    "${var.public_ip_cidr_range[var.environment]}",
-    "${var.private_ip_cidr_range[var.environment]}",
+    "${lookup(var.ip_cidr_ranges, "public_ip_cidr_range")}",
+    "${lookup(var.ip_cidr_ranges, "private_ip_cidr_range")}",
+    "${var.bastion_host_ip}",
   ]
 
   # "${google_compute_instance.vof-jumpbox.network_interface.0.access_config.0.assigned_nat_ip}",
@@ -92,7 +93,7 @@ resource "google_compute_firewall" "internal-firewall" {
 resource "google_compute_firewall" "public-firewall" {
   # vof-production-public-firewall
   name    = "${format("%s-%s-public-firewall", var.project_name, var.environment)}"
-  network = "${module.project_network.network_name}"
+  network = "${module.network.network_name}"
 
   allow {
     protocol = "tcp"
@@ -105,7 +106,7 @@ resource "google_compute_firewall" "public-firewall" {
 
 resource "google_compute_firewall" "allow-healthcheck-firewall" {
   name    = "${format("%s-%s-allow-healthcheck-firewall", var.project_name, var.environment)}"
-  network = "${module.project_network.network_name}"
+  network = "${module.network.network_name}"
 
   allow {
     protocol = "tcp"

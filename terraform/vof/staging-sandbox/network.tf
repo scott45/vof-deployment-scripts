@@ -1,16 +1,16 @@
 # Main Network
 
 module "network" {
-  source                = "../modules/network"
+  source                = "../../modules/network"
   project_name          = "${var.project_name}"
   region                = "${var.region}"
-  private_ip_cidr_range = "${var.private_ip_cidr_range}"
-  public_ip_cidr_range  = "${var.public_ip_cidr_range}"
+  private_ip_cidr_range = "${lookup(var.ip_cidr_ranges, "${format("%s_private_ip_cidr_range", var.environment)}")}"
+  public_ip_cidr_range  = "${lookup(var.ip_cidr_ranges, "${format("%s_public_ip_cidr_range", var.environment)}")}"
   environment           = "${var.environment}"
 }
 
 module "project_network" {
-  source = "../modules/network/peering"
+  source = "../../modules/network/peering"
 
   # vof-production-to-admin-network-peering
   name         = "${format("%s-%s-to-admin-network-peering", var.project_name, var.environment)}"
@@ -19,7 +19,7 @@ module "project_network" {
 }
 
 module "admin_network" {
-  source = "../modules/network/peering"
+  source = "../../modules/network/peering"
 
   # admim-to-vof-production-network-peering
   name         = "${format("admin-to-%s-%s-network-peering", var.project_name, var.environment)}"

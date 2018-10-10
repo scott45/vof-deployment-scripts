@@ -4,9 +4,9 @@
 **/terraform.tfvars
 **/terraform.tfvars.sample
 .terraform/
+*.tfvars
+
 .*.swp
 .*.swo
 **/.env
 .vscode/
-
-*.tfvars

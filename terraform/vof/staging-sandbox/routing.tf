@@ -85,15 +85,7 @@ resource "google_compute_firewall" "internal-firewall" {
     "${lookup(var.ip_cidr_ranges, "${format("%s_private_ip_cidr_range", var.environment)}")}",
     "${lookup(var.ip_cidr_ranges, "${format("%s_public_ip_cidr_range", var.environment)}")}",
     "${var.bastion_host_ip}",
-  ]
-
-  # source_ranges = [
-  #   "${lookup(var.ip_cidr_ranges, "public_ip_cidr_range")}",
-  #   "${lookup(var.ip_cidr_ranges, "private_ip_cidr_range")}",
-  #   "${var.bastion_host_ip}",
-  # ]
-
-  # "${google_compute_instance.vof-jumpbox.network_interface.0.access_config.0.assigned_nat_ip}",
+  ] 
 }
 
 resource "google_compute_firewall" "public-firewall" {

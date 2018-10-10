@@ -35,7 +35,7 @@ resource "google_compute_instance_group_manager" "manager" {
 resource "google_compute_instance_template" "template" {
   # vof-production-template-mknnkjnkn
   name_prefix          = "${format("%s-%s-template-", var.project_name, var.environment)}"
-  machine_type         = "${lookup(var.machine_types, "standard")}"
+  machine_type         = "${var.machine_type}"
   region               = "${var.region}"
   description          = "Base template to create ${var.project_name} instances"
   instance_description = "Instance created from base template"
@@ -88,20 +88,11 @@ resource "google_compute_instance_template" "template" {
     "${replace(lower(random_id.database_instance_name.b64), "_", "-")}") :
     var.shared_database_instance_name }"
 
-    databaseUser = "${
-      var.environment =="production"
-      ? random_id.database_username.b64
-      : format("%s-%s", var.project_name, var.environment)}"
+    databaseUser = "${random_id.database_username.b64}"
 
-    databasePassword = "${
-      var.environment =="production"
-      ? random_id.database_password.b64
-      : format("%s-%s", var.project_name, var.environment)}"
+    databasePassword = "${andom_id.database_password.b64}"
 
-    databaseHost = "${
-      var.environment =="production"
-      ? google_sql_database_instance.instance.ip_address.0.ip_address
-      : var.shared_database_instance_ip}"
+    databaseHost = "${google_sql_database_instance.instance.ip_address.0.ip_address}"
   }
 
   lifecycle {
@@ -133,8 +124,8 @@ resource "google_compute_autoscaler" "autoscaler" {
   target = "${google_compute_instance_group_manager.manager.self_link}"
 
   autoscaling_policy = {
-    max_replicas    = "${lookup(var.max_instances, var.environment)}"
-    min_replicas    = "${lookup(var.min_instances, var.environment)}"
+    max_replicas    = "${var.max_instances}"
+    min_replicas    = "${var.min_instances}"
     cooldown_period = 60
 
     cpu_utilization {

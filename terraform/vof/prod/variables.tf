@@ -33,13 +33,9 @@ variable "google_project_id" {
   type = "string"
 }
 
-variable "machine_types" {
-  type = "map"
-
-  default = {
-    "standard" = "n1-standard-1"
-    "small"    = "g1-small"
-  }
+variable "machine_type" {
+  type = "string"
+  default = "n1-standard-1"
 }
 
 variable "credential_file" {
@@ -52,33 +48,16 @@ variable "environment" {
 }
 
 variable "max_instances" {
-  type = "map"
-
-  default = {
-    production = 3
-    staging    = 1
-    sandbox    = 1
-  }
+  default = 3
 }
 
 variable "min_instances" {
-  type = "map"
-
-  default = {
-    production = 2
-    staging    = 1
-    sandbox    = 1
-  }
+  default = 2
 }
 
 variable "bastion_host_ip" {
   type    = "string"
-  default = ""
 }
-
-variable "shared_database_instance_name" {}
-
-variable "shared_database_instance_ip" {}
 
 variable "health_checks_port" {
   default = "8080"
@@ -119,51 +98,6 @@ variable "healthy_threshold" {
   default = "2"
 }
 
-variable "timeout_sec" {
-  type    = "string"
-  default = "1"
-}
-
-variable "ip_cidr_range" {
-  type    = "string"
-  default = "10.0.0.0/24"
-}
-
-variable "staging_ip_cidr_range" {
-  type    = "string"
-  default = "10.1.0.0/24"
-}
-
-variable "sandbox_ip_cidr_range" {
-  type    = "string"
-  default = "10.2.0.0/24"
-}
-
-variable "ip_cidr_range_next" {
-  type    = "string"
-  default = "10.0.1.0/24"
-}
-
-variable "staging_ip_cidr_range_next" {
-  type    = "string"
-  default = "10.1.1.0/24"
-}
-
-variable "sandbox_ip_cidr_range_next" {
-  type    = "string"
-  default = "10.2.1.0/24"
-}
-
-variable "db_username" {
-  type    = "string"
-  default = "daniel"
-}
-
-variable "db_replication_type" {
-  type    = "string"
-  default = "SYNCHRONOUS"
-}
-
 variable "db_backup_start_time" {
   type    = "string"
   default = "00:12"
@@ -172,26 +106,6 @@ variable "db_backup_start_time" {
 variable "db_instance_tier" {
   type    = "string"
   default = "db-f1-micro"
-}
-
-variable "db_failover_target" {
-  type    = "string"
-  default = "true"
-}
-
-variable "db_connect_retry_interval" {
-  type    = "string"
-  default = "40"
-}
-
-variable "db_master_replica_name" {
-  type    = "string"
-  default = "vof-replica-master"
-}
-
-variable "db_master_replica_password" {
-  type    = "string"
-  default = "vof-replica"
 }
 
 variable "service_account_email" {
@@ -207,10 +121,6 @@ variable "slack_channel" {
 }
 
 variable "cable_url" {
-  type = "string"
-}
-
-variable "redis_ip" {
   type = "string"
 }
 

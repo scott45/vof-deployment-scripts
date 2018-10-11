@@ -1,5 +1,5 @@
 resource "google_compute_backend_service" "web" {
-  # vof-production-loadbalancer
+  # vof-staging-loadbalancer
   name        = "${format("%s-%s-loadbalancer", var.project_name, var.environment)}"
   description = "${format(" %s loadbalancer", var.project_name)}"
   port_name   = "customhttps"
@@ -17,10 +17,10 @@ resource "google_compute_backend_service" "web" {
 }
 
 resource "google_compute_instance_group_manager" "manager" {
-  # vof-production-instance-group-manager
+  # vof-staging-instance-group-manager
   name = "${format("%s-%s-instance-group-manager", var.project_name, var.environment)}"
 
-  # vof-production-app-instance
+  # vof-staging-app-instance
   base_instance_name = "${format("%s-%s-app-instance", var.project_name, var.environment)}"
   instance_template  = "${google_compute_instance_template.template.self_link}"
   zone               = "${var.zone}"
@@ -33,15 +33,15 @@ resource "google_compute_instance_group_manager" "manager" {
 }
 
 resource "google_compute_instance_template" "template" {
-  # vof-production-template-mknnkjnkn
+  # vof-staging-template-mknnkjnkn
   name_prefix          = "${format("%s-%s-template-", var.project_name, var.environment)}"
-  machine_type         = "${lookup(var.machine_types, "standard")}"
+  machine_type         = "${var.machine_type}"
   region               = "${var.region}"
   description          = "Base template to create ${var.project_name} instances"
   instance_description = "Instance created from base template"
 
   tags = [
-    # vof-production-app-server
+    # vof-staging-app-server
     "${format("%s-%s-app-server", var.project_name, var.environment)}",
 
     "${var.project_name}-app-server",
@@ -78,20 +78,11 @@ resource "google_compute_instance_template" "template" {
     google_storage_secret_access_key = "${var.google_storage_secret_access_key}"
     dbBackupNotificationToken        = "${var.db_backup_notification_token}"
 
-    databaseInstanceName = "${var.environment == "production"
-? format("%s-%s-database-instance-%s", var.project_name, var.environment,
-"${replace(lower(random_id.database_instance_name.b64), "_", "-")}") :
-var.shared_database_instance_name}"
+    databaseInstanceName = "${var.shared_database_instance_name}"
 
-    databaseUser = "${
-var.environment =="production"
-? random_id.database_username.b64
-: format("%s-%s", var.project_name, var.environment)}"
+    databaseUser = "${format("%s-%s", var.project_name, var.environment)}"
 
-    databasePassword = "${
-var.environment =="production"
-? random_id.database_password.b64
-: format("%s-%s", var.project_name, var.environment)}"
+    databasePassword = "${format("%s-%s", var.project_name, var.environment)}"
 
     databaseHost = "${var.shared_database_instance_ip}"
   }
@@ -119,7 +110,7 @@ var.environment =="production"
 }
 
 resource "google_compute_autoscaler" "autoscaler" {
-  # vof-production-app-autoscaler
+  # vof-staging-app-autoscaler
   name   = "${format("%s-%s-app-autoscaler", var.project_name, var.environment)}"
   zone   = "${var.zone}"
   target = "${google_compute_instance_group_manager.manager.self_link}"
@@ -136,7 +127,7 @@ resource "google_compute_autoscaler" "autoscaler" {
 }
 
 resource "google_compute_https_health_check" "healthcheck" {
-  # vof-production-app-healthcheck
+  # vof-staging-app-healthcheck
   name                = "${format("%s-%s-app-healthcheck", var.project_name, var.environment)}"
   port                = "${var.health_checks_port}"
   request_path        = "${var.request_path}"

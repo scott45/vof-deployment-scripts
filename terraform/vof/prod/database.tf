@@ -15,10 +15,10 @@ resource "google_sql_database_instance" "instance" {
   database_version = "POSTGRES_9_6"
 
   # vof-production-database-instance-hjErad664")
-  name = "${var.environment=="production" ? format(
+  name = "${format(
     "%s-%s-database-instance-%s",
     var.project_name, var.environment,
-    "${replace(lower(random_id.database_instance_name.b64), "_", "-")}"): var.shared_database_instance_name}"
+    "${replace(lower(random_id.database_instance_name.b64), "_", "-")}")}"
 
   project = "${var.google_project_id}"
   count   = 1
@@ -51,10 +51,7 @@ resource "google_sql_database" "database" {
   charset   = "UTF8"
   collation = "en_US.UTF8"
 
-  instance = "${
-    var.environment == "production"
-    ? google_sql_database_instance.instance.name
-    : var.shared_database_instance_name}"
+  instance = "${google_sql_database_instance.instance.name}"
 }
 
 resource "google_sql_user" "database-user" {
@@ -62,8 +59,5 @@ resource "google_sql_user" "database-user" {
   password = "${random_id.database_password.b64}"
   host     = ""
 
-  instance = "${
-    var.environment == "production"
-    ? google_sql_database_instance.instance.name
-    : var.shared_database_instance_name}"
+  instance = "${google_sql_database_instance.instance.name}"
 }

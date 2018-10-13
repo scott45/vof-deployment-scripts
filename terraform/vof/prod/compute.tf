@@ -90,7 +90,7 @@ resource "google_compute_instance_template" "template" {
 
     databaseUser = "${random_id.database_username.b64}"
 
-    databasePassword = "${andom_id.database_password.b64}"
+    databasePassword = "${random_id.database_password.b64}"
 
     databaseHost = "${google_sql_database_instance.instance.ip_address.0.ip_address}"
   }

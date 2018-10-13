@@ -65,7 +65,7 @@ resource "google_compute_url_map" "http-url-map" {
 
 resource "google_compute_firewall" "internal-firewall" {
   name    = "${format("%s-%s-internal-network", var.project_name, var.environment)}"
-  network = "${module.network.network_name}"
+  network = "${format("shared-%s-network", var.environment)}"
 
   allow {
     protocol = "icmp"
@@ -82,16 +82,16 @@ resource "google_compute_firewall" "internal-firewall" {
   }
 
   source_ranges = [
-    "${lookup(var.ip_cidr_ranges, "${format("%s_private_ip_cidr_range", var.environment)}")}",
-    "${lookup(var.ip_cidr_ranges, "${format("%s_public_ip_cidr_range", var.environment)}")}",
+    "${lookup(var.ip_cidr_ranges, "${format("%s-%s-private-ip-cidr-range", var.project_name, var.environment)}")}",
+    "${lookup(var.ip_cidr_ranges, "${format("%s-%s-public-ip-cidr-range", var.project_name, var.environment)}")}",
     "${var.bastion_host_ip}",
-  ] 
+  ]
 }
 
 resource "google_compute_firewall" "public-firewall" {
   # vof-production-public-firewall
   name    = "${format("%s-%s-public-firewall", var.project_name, var.environment)}"
-  network = "${module.network.network_name}"
+  network = "${format("shared-%s-network", var.environment)}"
 
   allow {
     protocol = "tcp"
@@ -104,7 +104,7 @@ resource "google_compute_firewall" "public-firewall" {
 
 resource "google_compute_firewall" "allow-healthcheck-firewall" {
   name    = "${format("%s-%s-allow-healthcheck-firewall", var.project_name, var.environment)}"
-  network = "${module.network.network_name}"
+  network = "${format("shared-%s-network", var.environment)}"
 
   allow {
     protocol = "tcp"

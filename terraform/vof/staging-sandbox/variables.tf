@@ -22,8 +22,6 @@ variable "admin_peer_network_name" {
   default     = "apprenticeship-admin-network"
 }
 
-variable "bucket" {}
-
 variable "base_image" {
   type    = "string"
   default = "ubuntu-1604-xenial-v20170815a"
@@ -34,7 +32,7 @@ variable "google_project_id" {
 }
 
 variable "machine_type" {
-  type = "string"
+  type    = "string"
   default = "g1-small"
 }
 
@@ -51,8 +49,8 @@ variable "max_instances" {
   type = "map"
 
   default = {
-    staging    = 1
-    sandbox    = 1
+    staging = 1
+    sandbox = 1
   }
 }
 
@@ -60,8 +58,8 @@ variable "min_instances" {
   type = "map"
 
   default = {
-    staging    = 1
-    sandbox    = 1
+    staging = 1
+    sandbox = 1
   }
 }
 
@@ -138,20 +136,19 @@ variable "global_static_ip" {
 variable "ip_cidr_ranges" {
   type = "map"
 
-  # TODO
-  # Fix how cidr blocks are picked up
   default = {
-    staging_private_ip_cidr_range = "10.10.0.0/24"
-    staging_public_ip_cidr_range  = "10.12.0.0/24"
-    sandbox_private_ip_cidr_range = "10.8.0.0/24"
-    sandbox_public_ip_cidr_range  = "10.9.0.0/24"
+    vof-staging-private-ip-cidr-range = "10.5.1.0/24"
+    vof-staging-public-ip-cidr-range  = "10.6.1.0/24"
+    vof-sandbox-private-ip-cidr-range = "10.7.2.0/24"
+    vof-sandbox-public-ip-cidr-range  = "10.8.2.0/24"
   }
 }
+
 variable "bastion_host_ip" {
   type = "string"
 }
 
-variable "vof_bucket" {
+variable "bucket" {
   type    = "string"
   default = "apprenticeship"
 }

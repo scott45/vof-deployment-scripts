@@ -8,11 +8,11 @@ provider "google" {
 terraform {
   backend "gcs" {
     bucket = "apprenticeship"
-    prefix = "vof/terraform"
+    prefix = "shared-network/terraform"
   }
 }
 
-data "terraform_remote_state" "vof" {
+data "terraform_remote_state" "shared-network" {
   backend = "gcs"
 
   config {

@@ -32,6 +32,22 @@ resource "google_compute_instance_group_manager" "manager" {
   }
 }
 
+resource "google_compute_subnetwork" "private_sub" {
+  # vof-staging-private-sub-network
+  name          = "${format("%s-%s-private-sub-network", var.project_name, var.environment)}"
+  ip_cidr_range = "${lookup(var.ip_cidr_ranges, "${format("%s-%s-private-ip-cidr-range", var.project_name, var.environment)}")}"
+  region        = "europe-west1"
+  network       = "${format("shared-%s-network", var.environment)}"
+}
+
+resource "google_compute_subnetwork" "public_sub" {
+  # vof-staging-public-sub-network
+  name          = "${format("%s-%s-public-sub-network", var.project_name, var.environment)}"
+  ip_cidr_range = "${lookup(var.ip_cidr_ranges, "${format("%s-%s-public-ip-cidr-range", var.project_name, var.environment)}")}"
+  region        = "europe-west1"
+  network       = "${format("shared-%s-network", var.environment)}"
+}
+
 resource "google_compute_instance_template" "template" {
   # vof-staging-template-mknnkjnkn
   name_prefix          = "${format("%s-%s-template-", var.project_name, var.environment)}"
@@ -48,7 +64,7 @@ resource "google_compute_instance_template" "template" {
   ]
 
   network_interface {
-    subnetwork    = "${module.network.private_network_name}"
+    subnetwork    = "${format("%s-%s-private-sub-network", var.project_name, var.environment)}"
     access_config = {}
   }
 

@@ -1,0 +1,42 @@
+{
+	"variables": {
+		"service_account_json": "../shared/account.json",
+        "project_id": "{{env `PROJECT_ID`}}",
+        "bucket_name": "{{env `BUCKET_NAME`}}"
+	},
+	"builders": [
+		{
+			"type": "googlecompute",
+			"project_id": "{{user `project_id`}}",
+			"machine_type": "n1-standard-1",
+			"source_image": "ubuntu-1604-xenial-v20170815a",
+			"region": "europe-west1",
+			"zone": "europe-west1-b",
+			"ssh_username": "elk",
+			"image_description": "image used to create an instance configured with elk",
+			"image_family": "ubuntu-1604-lts",
+			"image_name": "vof-elk-base-image",
+			"disk_size": 20,
+			"account_file": "{{ user `service_account_json`}}"
+		}
+	],
+	"provisioners": [
+        {
+			"type": "file",
+			"source": "{{ user `service_account_json`}}",
+            "destination": "/home/elk/shared/account.json"
+		},
+		{
+			"type": "file",
+			"source": "start_elk.sh",
+            "destination": "/home/elk/start_elk.sh"
+		},
+		{
+            "type": "shell",
+            "environment_vars": [
+                "BUCKET_NAME={{user `bucket_name`}}"
+            ],
+			"script": "setup.sh"
+		}
+	]
+}

@@ -1,0 +1,40 @@
+{
+	"variables": {
+		"service_account_json": "../../shared/account.json",
+		"project_id": "{{env `PROJECT_ID`}}"
+	},
+	"builders": [
+		{
+			"type": "googlecompute",
+			"project_id": "{{user `project_id`}}",
+			"machine_type": "n1-standard-1",
+			"source_image": "ubuntu-1604-xenial-v20170202",
+			"region": "europe-west1",
+			"zone": "europe-west1-b",
+			"ssh_username": "ubuntu",
+			"image_description": "Jenkins Master Image",
+			"image_family": "ubuntu-1604-lts",
+			"image_name": "jenkins-master-image-{{timestamp}}",
+			"disk_size": 10,
+			"account_file": "{{ user `service_account_json`}}"
+		}
+	],
+	"provisioners": [	
+		{
+			"type":"shell",
+			"inline": [
+				"sudo apt-get update",
+				"sudo apt-get install -y ansible",
+				"curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz",
+				"sudo mkdir -p /usr/local/gcloud",
+				"sudo tar -C /usr/local/gcloud -xvf /tmp/google-cloud-sdk.tar.gz",
+				"sudo CLOUDSDK_CORE_DISABLE_PROMPTS=1 /usr/local/gcloud/google-cloud-sdk/install.sh",
+				"sudo gcloud components install beta --quiet"			
+			]
+		},
+		{
+            "type":"ansible-local",
+            "playbook_file": "./ansible_playbook_master.yml"
+        }		
+	]
+}

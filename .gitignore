@@ -1,0 +1,12 @@
+**/service-account.json
+**/terraform.tfstate.backup
+**/terraform.tfstate
+**/terraform.tfvars
+**/terraform.tfvars.sample
+.terraform/
+*.tfvars
+
+.*.swp
+.*.swo
+**/.env
+.vscode/

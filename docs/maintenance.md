@@ -13,10 +13,10 @@ This was achieved by Creating a crontab that runs unattended upgrades regularly 
 The unattended_upgrades package is installed among other system dependencies in the setup.sh file.
 Below is an example of the cronjob
 
-> *0 9 * * * sudo unattended-upgrade -v | mail -s "Notification: Upgrades successfully run on $(uname -n)" youremail@domain.com.*
+>0 9 * * * curl -X POST --data-urlencode "payload={\"channel\": \"#channel\", \"username\": \"unattended-upgrades\", \"text\": \"*Unattended upgrades report from $(uname -n)*\n>>>$(sudo unattended-upgrade -v)\", \"icon_emoji\": \":bell:\"}" ${var.slack_hook_url}
 
 
- This crontab runs the command `unattended-upgrade  -v` at 0900hrs every day. It sends an email with the    subject “Notification: Upgrades successfully run on $(uname -n)” to    the specified email address. uname-n adds the machine’s name to the    subject.
+ This crontab runs the command `unattended-upgrade ` at 0900hrs every day. It sends a slack notification to the specified Slack channel. uname-n adds the machine’s name to the subject.
 This has been implemented using the `run_upgrades` function in the start_vof.sh file.
 Checkout  more information on crontabs [here](http://www.adminschoice.com/crontab-quick-reference).
 
@@ -28,29 +28,27 @@ below is a sample /etc/logrotate.conf file:
 
 > {
 
->     weekly
+>     daily
 >     rotate 4
 >     missingok
 >     notifempty
->     mail youremail@domain.com
 
 > }
 
-The above file enables logrotate to be executed weekly and only keep the most recent 4 compressed logs. If there are no logs, compression is not done. An email containing the logs is then sent to the specified email.
+The above file enables logrotate to be executed daily and only keep the most recent 4 compressed logs. If there are no logs, compression is not done. A Slack notification is then sent to the specified slack channel.
 This has been implemented using the `logrotate_config` function in the start_vof.sh file.
 Checkout more information on log rotate [here](https://www.linode.com/docs/uptime/logs/use-logrotate-to-manage-log-files).
 
-### Configuring Mailgun
-Google Compute Engine does not allow outbound connections on ports 25, 465, and 587. By default, these outbound SMTP ports are blocked hence we need a third part email service such as SendGrid, Mailgun, and Mailjet. They allow one to set up and send email through their servers. Mailgun email service was used to enable emailing in the VOF project and here is the how:
+### Configuring Slack Notifications
+After the above cronjobs have been executed, we need to send slack notifications. This can be done using slack webhooks.
+1. From your slack inbox, click on the ```settings``` icon.
+2. Click on ```Add an app```.
+3. search ```webhook``` and select ```incoming webhook```.
+4. From ```Integration settings```, copy the webhook URl
+Use this command to setup the channel, username and emoji of the webhook as well as the content of the message and add the webhook url:
+``` curl -X POST --data-urlencode "payload={ \"channel\": \"#your-channel\", \"username\": \"webhook-username\", \"text\": \"The message\", \"icon_emoji\": \":slack:\"}" ${var.slack_hook_url}```
 
-**step1:** Create a new Mailgun account on Mailgun's [Google partner page](https://www.mailgun.com/google).
-
-**step2:** Get your credentials from Mailgun. They can be found under the domains tab. NB: The Mailgun SMTP hostname is smtp.mailgun.org
-
-**step3:** Follow the guidelines provided [here](https://cloud.google.com/compute/docs/tutorials/sending-mail/using-mailgun) to relay using postfix.
-
-In this project, relaying using postfix has been implemented automatically using the configure_mailgun function in the start_vof.sh file.
-
+After making changes accordingly, run the command and check your slack channel for the notification. In this project, the command is run by a crontab.
 
 ## Conclusion
 
